@@ -5,15 +5,19 @@ stages:
 build_app:
   stage: build
   script:
+    - echo "Building the project..."
     - npm install
     - npm run build
+    - echo "Build complete."
   only:
     - main
 
 deploy_app:
   stage: deploy
   script: 
+    - echo "Deploying the project..."
     - scp -r ./dist user@server:path/to/deploy
+    - echo "Deploy complete."
   only:
     - main
 
