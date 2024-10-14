@@ -7,7 +7,8 @@ build_app:
   script:
     - echo "Building the project..."
     - npm install
-    - npm run build
+    - npm run start
+    - npm run android
     - echo "Build complete."
   only:
     - master
