@@ -9,7 +9,7 @@ build_app:
     - npm install
     - npm run start
     - npm run android
-    - echo "Build complete."
+    - echo "Build complete"
   only:
     - master
 
