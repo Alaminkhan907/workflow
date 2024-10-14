@@ -10,7 +10,7 @@ build_app:
     - npm run build
     - echo "Build complete."
   only:
-    - main
+    - master
 
 deploy_app:
   stage: deploy
@@ -19,7 +19,7 @@ deploy_app:
     - scp -r ./dist user@server:path/to/deploy
     - echo "Deploy complete."
   only:
-    - main
+    - master
 
 
 
