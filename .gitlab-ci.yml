@@ -1,0 +1,21 @@
+stages:          
+  - build
+  - deploy
+
+build_app:
+  stage: build
+  script:
+    - npm install
+    - npm run build
+  only:
+    - main
+
+deploy_app:
+  stage: deploy
+  script: 
+    - scp -r ./dist user@server:path/to/deploy
+  only:
+    - main
+
+
+
