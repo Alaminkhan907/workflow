@@ -1,0 +1,23 @@
+stages:          
+  - build
+  - deploy
+
+build_app:
+  stage: build
+  
+  script:
+    - echo "Building the project..."
+    - npm install
+    - npm run web
+    - echo "Build complete."
+  only:
+    - master
+
+deploy_app:
+  stage: deploy
+  script: 
+    - echo "Deploying the project..."
+    - npm run android
+    - echo "Deploy complete."
+  only:
+    - master
