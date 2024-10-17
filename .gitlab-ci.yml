@@ -1,4 +1,4 @@
-image: node:14
+image: node:18
 
 stages:          
   - build
@@ -9,7 +9,7 @@ build_app:
   
   script:
     - echo "Testing the project..."
-    - cd ./Backend-server
+    - cd ./Frontend/app
     - npm install 
     - npm run web 
     - echo "Build complete."
