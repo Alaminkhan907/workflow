@@ -13,16 +13,53 @@ import TaskDetailScreen from "../screens/task/TaskDetailScreen";
 import ProjectOne from "../screens/project/ProjectOne";
 import AddTaskScreen from "../screens/task/AddTaskScreen";
 
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import Feather from "@expo/vector-icons/Feather";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const UserTabs = () => (
   <Tab.Navigator>
-    <Tab.Screen name="Dashboard" component={DashboardScreen} />
-    <Tab.Screen name="Project" component={ProjectScreen} />
-    <Tab.Screen name="About" component={AboutScreen} />
+    <Tab.Screen
+      name="Dashboard"
+      component={DashboardScreen}
+      options={{
+        tabBarIcon: ({ color, size }) => (
+          <MaterialCommunityIcons name="home-circle" size={24} color="black" />
+        ),
+      }}
+    />
+    <Tab.Screen
+      name="Project"
+      component={ProjectScreen}
+      options={{
+        tabBarIcon: ({ color, size }) => (
+          <FontAwesome5 name="tasks" size={24} color="black" />
+        ),
+      }}
+    />
+    <Tab.Screen
+      name="About"
+      component={AboutScreen}
+      options={{
+        tabBarIcon: ({ color, size }) => (
+          <Feather name="info" size={24} color="black" />
+        ),
+      }}
+    />
     {/* <Tab.Screen name="New Project" component={NewProjectScreen} /> */}
-    <Tab.Screen name="Task Details" component={TaskDetailScreen} />
+    <Tab.Screen
+      name="Task Details"
+      component={TaskDetailScreen}
+      options={{
+        tabBarIcon: ({ color, size }) => (
+          <MaterialIcons name="task" size={24} color="black" />
+        ),
+      }}
+    />
     {/* <Tab.Screen name="Task 1" component={ProjectOne} /> */}
   </Tab.Navigator>
 );
