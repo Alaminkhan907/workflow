@@ -10,7 +10,6 @@ build_app:
   script:
     - echo "Building the project..."
     - cd ./Frontend
-    - npm install -g eas-cli
     - npm install 
     - echo "Build complete."
   only:
@@ -20,6 +19,8 @@ deploy_app:
   stage: deploy
   script: 
     - echo "Deploying the project..."
+    - cd ./Frontend
+    - npm install -g eas-cli
     - eas login --token OS3EHPkHik2nqiuyRf75UoxVyWpjh80irX4m4qAv
     - eas update -p android
     - echo "Deploy complete."
