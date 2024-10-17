@@ -9,11 +9,8 @@ build_app:
   
   script:
     - echo "Building the project..."
-    - cd ./Frontend/app
-    - npm install -g eas-cli
+    - cd ./Frontend
     - npm install 
-    - eas login --token OS3EHPkHik2nqiuyRf75UoxVyWpjh80irX4m4qAv
-    - eas build:run -p android
     - echo "Build complete."
   only:
     - CItest
@@ -22,7 +19,11 @@ deploy_app:
   stage: deploy
   script: 
     - echo "Deploying the project..."
-    - npm run android
+    - cd ./Frontend
+    - npm install expo
+    - npm install -g eas-cli
+    - export EXPO_TOKEN=$EXPO_TOKEN_ENV_VAR
+    - eas update -p android --auto
     - echo "Deploy complete."
   only:
     - CItest
