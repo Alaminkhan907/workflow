@@ -8,10 +8,10 @@ build_app:
   stage: build
   
   script:
-    - echo "Testing the project..."
+    - echo "Building the project..."
     - cd ./Frontend/app
     - npm install 
-    - npm run web 
+    - npm run web
     - echo "Build complete."
   only:
     - CItest
