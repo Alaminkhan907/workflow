@@ -2,6 +2,7 @@
   "expo": {
     "name": "Universal-work-flow",
     "slug": "Universal-work-flow",
+    "owner": "universal-workflow",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.ilves.Universalworkflow"
     },
     "web": {
       "favicon": "./assets/favicon.png"
