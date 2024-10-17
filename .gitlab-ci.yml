@@ -9,9 +9,9 @@ build_app:
   
   script:
     - echo "Building the project..."
-    - cd ./Frontend/app
+    - cd ./Frontend
+    - npm install -g eas-cli
     - npm install 
-    - npm run web
     - echo "Build complete."
   only:
     - CItest
@@ -20,7 +20,8 @@ deploy_app:
   stage: deploy
   script: 
     - echo "Deploying the project..."
-    - npm run android
+    - eas login --token OS3EHPkHik2nqiuyRf75UoxVyWpjh80irX4m4qAv
+    - eas update -p android
     - echo "Deploy complete."
   only:
     - CItest
