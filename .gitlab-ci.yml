@@ -13,7 +13,7 @@ build_app:
     - npm install 
     - echo "Build complete."
   only:
-    - CItest
+    - master
 
 deploy_app:
   stage: deploy
@@ -26,6 +26,6 @@ deploy_app:
     - eas update -p android --auto
     - echo "Deploy complete."
   only:
-    - CItest
+    - master
 
     
