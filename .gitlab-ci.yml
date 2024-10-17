@@ -20,6 +20,7 @@ deploy_app:
   script: 
     - echo "Deploying the project..."
     - cd ./Frontend
+    - npm install expo
     - npm install -g eas-cli
     - export EXPO_TOKEN=$EXPO_TOKEN_ENV_VAR
     - eas update -p android --auto
