@@ -22,7 +22,7 @@ deploy_app:
     - cd ./Frontend
     - npm install -g eas-cli
     - export EXPO_TOKEN=$EXPO_TOKEN_ENV_VAR
-    - eas update -p android
+    - eas update -p android --auto
     - echo "Deploy complete."
   only:
     - CItest
