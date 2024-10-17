@@ -21,7 +21,7 @@ deploy_app:
     - echo "Deploying the project..."
     - cd ./Frontend
     - npm install -g eas-cli
-    - eas login --token OS3EHPkHik2nqiuyRf75UoxVyWpjh80irX4m4qAv
+    - eas login --token $EXPO_TOKEN
     - eas update -p android
     - echo "Deploy complete."
   only:
