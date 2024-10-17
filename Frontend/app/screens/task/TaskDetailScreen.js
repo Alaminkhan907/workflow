@@ -49,11 +49,9 @@ const TaskDetailScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    backgroundColor: "#F9F9F9",
     padding: 20,
-    backgroundColor: "#F8F8F8",
-    borderRadius: 10,
-    width: 400,
-    height: 250,
   },
   header: {
     flexDirection: "row",

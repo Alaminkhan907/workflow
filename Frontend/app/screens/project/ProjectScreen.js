@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
-const ProjectScreen = () => {
+const ProjectScreen = ({ navigation }) => {
   const [projects, setProjects] = useState([
     { id: "1", name: "Project 1", description: "Short description (optional)" },
     { id: "2", name: "Project 2", description: "Short description (optional)" },
@@ -26,7 +26,7 @@ const ProjectScreen = () => {
     setDate(currentDate);
   };
   const handleClick = () => {
-    navigation.replace("UNewProjectScreen");
+    navigation.replace("NewProject");
   };
 
   return (

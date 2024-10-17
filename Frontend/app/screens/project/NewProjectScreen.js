@@ -20,7 +20,9 @@ const NewProjectScreen = ({ navigation }) => {
       team: ["LS", "KT", "RP"],
     },
   ]);
-
+  const handleClick = () => {
+    navigation.replace("AddTask");
+  };
   const renderTask = ({ item }) => (
     <View style={styles.taskCard}>
       <Text style={styles.taskName}>{item.name}</Text>
@@ -38,7 +40,12 @@ const NewProjectScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          onPress={() => {
+            console.log("Back button pressed");
+            navigation.replace("Project");
+          }}
+        >
           <Ionicons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
         <Text style={styles.projectTitle}>New Project</Text>
@@ -49,7 +56,7 @@ const NewProjectScreen = ({ navigation }) => {
       <View style={styles.addTaskSection}>
         <Text style={styles.addTaskText}>Add Task</Text>
         <TouchableOpacity>
-          <Ionicons name="add" size={24} color="black" />
+          <Ionicons name="add" size={24} color="black" onPress={handleClick} />
         </TouchableOpacity>
       </View>
       <FlatList

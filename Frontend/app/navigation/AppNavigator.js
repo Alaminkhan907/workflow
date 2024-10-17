@@ -11,6 +11,7 @@ import AboutScreen from "../screens/profile/AboutScreen";
 import NewProjectScreen from "../screens/project/NewProjectScreen";
 import TaskDetailScreen from "../screens/task/TaskDetailScreen";
 import ProjectOne from "../screens/project/ProjectOne";
+import AddTaskScreen from "../screens/task/AddTaskScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -20,9 +21,9 @@ const UserTabs = () => (
     <Tab.Screen name="Dashboard" component={DashboardScreen} />
     <Tab.Screen name="Project" component={ProjectScreen} />
     <Tab.Screen name="About" component={AboutScreen} />
-    <Tab.Screen name="New Project" component={NewProjectScreen} />
+    {/* <Tab.Screen name="New Project" component={NewProjectScreen} /> */}
     <Tab.Screen name="Task Details" component={TaskDetailScreen} />
-    <Tab.Screen name="Task 1" component={ProjectOne} />
+    {/* <Tab.Screen name="Task 1" component={ProjectOne} /> */}
   </Tab.Navigator>
 );
 
@@ -32,6 +33,9 @@ const AppNavigator = () => {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="UserTabs" component={UserTabs} />
+        <Stack.Screen name="NewProject" component={NewProjectScreen} />
+        <Stack.Screen name="AddTask" component={AddTaskScreen} />
+        <Stack.Screen name="Project" component={ProjectScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
