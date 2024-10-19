@@ -1,4 +1,4 @@
-// app/navigation/AppNavigator.js
+// SD; // app/navigation/AppNavigator.js
 
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
@@ -71,11 +71,14 @@ const AppNavigator = () => {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="UserTabs" component={UserTabs} />
         <Stack.Screen name="NewProject" component={NewProjectScreen} />
-        <Stack.Screen name="AddTask" component={AddTaskScreen} />
+
+        <Stack.Group screenOptions={{ presentation: "modal" }}>
+          <Stack.Screen name="AddTask" component={AddTaskScreen} />
+        </Stack.Group>
+
         <Stack.Screen name="Project" component={ProjectScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
-
 export default AppNavigator;
