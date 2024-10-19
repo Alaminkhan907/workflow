@@ -29,7 +29,7 @@ const NewProjectScreen = ({ navigation }) => {
       <Text style={styles.taskDate}>{item.date}</Text>
       <View style={styles.teamContainer}>
         {item.team.map((member, index) => (
-          <Text key={index} style={styles.teamMember}>
+          <Text key={`${item.id}-${index}`} style={styles.teamMember}>
             {member}
           </Text>
         ))}
@@ -48,7 +48,7 @@ const NewProjectScreen = ({ navigation }) => {
         >
           <Ionicons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
-        <Text style={styles.projectTitle}>New Project</Text>
+        <Text style={styles.projectTitle}>New Task</Text>
         <TouchableOpacity>
           <Ionicons name="pencil" size={24} color="black" />
         </TouchableOpacity>

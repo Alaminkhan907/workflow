@@ -1,9 +1,10 @@
 import React from "react";
 import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
 const AboutScreen = ({ navigation }) => {
   const handleLogout = () => {
-    // Add your logout logic here (e.g., clear user data, navigate to login screen)
+    // Add your logout logic here
     navigation.navigate("Login"); // Navigate to login screen
   };
 
@@ -18,25 +19,47 @@ const AboutScreen = ({ navigation }) => {
       />
 
       {/* User Info */}
-      <View style={styles.infoContainer}>
-        <Text style={styles.nameText}>Jan Khan</Text>
-        <Text style={styles.roleText}>Manager</Text>
-        <Text style={styles.emailText}>john.khan@google.com</Text>
-      </View>
+      <Text style={styles.nameText}>Jan</Text>
+      <Text style={styles.usernameText}>@Jantheboss</Text>
+      <Text style={styles.roleText}>Project Manager</Text>
 
-      {/* Description */}
-      <View style={styles.descriptionContainer}>
-        <Text style={styles.descriptionText}>
-          Jan has been with the company for 500 years, overseeing operations and
-          managing a team of talented individuals. Passionate about technology
-          and leadership, John ensures smooth project delivery.
-        </Text>
-      </View>
-
-      {/* Logout Button */}
-      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-        <Text style={styles.logoutButtonText}>Logout</Text>
+      {/* Edit Profile Button */}
+      <TouchableOpacity style={styles.editProfileButton}>
+        <Text style={styles.editProfileButtonText}>Edit Profile</Text>
       </TouchableOpacity>
+
+      {/* Menu List */}
+      <View style={styles.menuContainer}>
+        <TouchableOpacity style={styles.menuItem}>
+          <Ionicons name="settings-outline" size={24} color="black" />
+          <Text style={styles.menuItemText}>Settings</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.menuItem}>
+          <MaterialIcons name="assignment-ind" size={24} color="black" />
+          <Text style={styles.menuItemText}>Responsibility</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.menuItem}>
+          <Ionicons name="location-outline" size={24} color="black" />
+          <Text style={styles.menuItemText}>Address</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.menuItem}>
+          <Ionicons name="lock-closed-outline" size={24} color="black" />
+          <Text style={styles.menuItemText}>Change Password</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.menuItem}>
+          <Ionicons name="help-circle-outline" size={24} color="black" />
+          <Text style={styles.menuItemText}>Support & Help</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
+          <Ionicons name="exit-outline" size={24} color="black" />
+          <Text style={styles.menuItemText}>Logout</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -44,53 +67,55 @@ const AboutScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#EAEDED",
-    justifyContent: "center",
+    backgroundColor: "#fff",
+    paddingHorizontal: 20,
     alignItems: "center",
-    paddingHorizontal: 10,
   },
   profileImage: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    marginBottom: 20,
-  },
-  infoContainer: {
-    alignItems: "center",
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    marginTop: 50,
     marginBottom: 20,
   },
   nameText: {
     fontSize: 24,
     fontWeight: "bold",
   },
-  roleText: {
-    fontSize: 18,
+  usernameText: {
+    fontSize: 16,
     color: "#777",
     marginBottom: 5,
   },
-  emailText: {
+  roleText: {
+    fontSize: 18,
+    color: "#777",
+    marginBottom: 30,
+  },
+  editProfileButton: {
+    backgroundColor: "#5A81F7",
+    paddingVertical: 10,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+    marginBottom: 30,
+  },
+  editProfileButtonText: {
+    color: "#fff",
     fontSize: 16,
-    color: "#555",
   },
-  descriptionContainer: {
-    marginBottom: 40,
-    paddingHorizontal: 10,
+  menuContainer: {
+    width: "100%",
   },
-  descriptionText: {
-    fontSize: 16,
-    color: "#444",
-    textAlign: "center",
-  },
-  logoutButton: {
-    backgroundColor: "#D9534F",
+  menuItem: {
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: 15,
-    paddingHorizontal: 40,
-    borderRadius: 10,
+    borderBottomColor: "#eee",
+    borderBottomWidth: 1,
   },
-  logoutButtonText: {
-    color: "#FFF",
+  menuItemText: {
     fontSize: 16,
-    fontWeight: "bold",
+    marginLeft: 10,
   },
 });
 

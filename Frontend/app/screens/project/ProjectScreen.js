@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,11 +11,12 @@ import {
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 const ProjectScreen = ({ navigation }) => {
-  const [projects, setProjects] = useState([
-    { id: "1", name: "Project 1", description: "Short description (optional)" },
-    { id: "2", name: "Project 2", description: "Short description (optional)" },
-    { id: "3", name: "Project 3", description: "Short description (optional)" },
-  ]);
+  const [projects, setProjects] = useState([]);
+  useEffect(() => {
+    fetch("http://localhost:3000/gettask")
+      .then((res) => res.json())
+      .then((data) => setProjects(data));
+  }, []);
 
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
@@ -41,16 +42,24 @@ const ProjectScreen = ({ navigation }) => {
       </View>
       <FlatList
         data={projects}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) =>
+          item.id ? item.id.toString() : index.toString()
+        }
         renderItem={({ item }) => (
-          <View style={styles.projectCard}>
-            <Text style={styles.projectTitle}>{item.name}</Text>
-            <Text style={styles.projectDescription}>{item.description}</Text>
-          </View>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("ProjectDetailScreen", { project: item })
+            }
+          >
+            <View style={styles.projectCard}>
+              <Text style={styles.projectTitle}>{item.name}</Text>
+              <Text style={styles.projectDescription}>{item.description}</Text>
+              <Text style={styles.teamContainer}>{item.assignee}</Text>
+            </View>
+          </TouchableOpacity>
         )}
       />
-
-      {/* Current Date Section */}
+      {/* Current Date Section
       <View style={styles.dateSection}>
         <Text style={styles.currentDateTitle}>Current date</Text>
 
@@ -71,7 +80,7 @@ const ProjectScreen = ({ navigation }) => {
             />
           )}
         </View>
-      </View>
+      </View> */}
     </View>
   );
 };
@@ -133,6 +142,9 @@ const styles = StyleSheet.create({
   selectDateLabel: {
     fontSize: 14,
     marginBottom: 10,
+  },
+  teamContainer: {
+    flexDirection: "row",
   },
   dateInput: {
     backgroundColor: "#FFFFFF",
