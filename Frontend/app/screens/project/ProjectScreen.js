@@ -27,7 +27,7 @@ const ProjectScreen = ({ navigation }) => {
     setDate(currentDate);
   };
   const handleClick = () => {
-    navigation.replace("NewProject");
+    navigation.replace("AddProjectScreen");
   };
 
   return (

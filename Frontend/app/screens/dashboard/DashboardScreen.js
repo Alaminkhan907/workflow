@@ -44,7 +44,7 @@ const DashboardScreen = ({ navigation }) => {
       </View>
 
       {/* Navigation Section */}
-      <View style={styles.navigationSection}>
+      {/* <View style={styles.navigationSection}>
         <Text style={styles.sectionTitle}>Navigate to:</Text>
         <TouchableOpacity
           style={styles.navButton}
@@ -58,7 +58,7 @@ const DashboardScreen = ({ navigation }) => {
         >
           <Text style={styles.navButtonText}>Tasks</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </ScrollView>
   );
 };

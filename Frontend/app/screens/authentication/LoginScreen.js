@@ -1,5 +1,3 @@
-// app/screens/LoginScreen.js
-
 import React, { useState } from "react";
 import {
   View,
@@ -7,17 +5,45 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const credentials = {
+    manager: {
+      email: "manager",
+      password: "manager",
+      role: "manager",
+    },
+    worker: {
+      email: "worker",
+      password: "worker",
+      role: "worker",
+    },
+  };
+
   const handleLogin = () => {
-    if (email && password) {
-      navigation.replace("UserTabs");
+    if (!email || !password) {
+      Alert.alert("Error", "manager , manager");
+      return;
+    }
+    if (
+      email === credentials.manager.email &&
+      password === credentials.manager.password
+    ) {
+      Alert.alert("Success", "Logged in as Manager");
+      navigation.replace("UserTabs", { role: credentials.manager.role });
+    } else if (
+      email === credentials.worker.email &&
+      password === credentials.worker.password
+    ) {
+      Alert.alert("Success", "Logged in as Worker");
+      navigation.replace("UserTabs", { role: credentials.worker.role });
     } else {
-      alert("Please enter both email and password");
+      Alert.alert("Error", "Invalid email or password");
     }
   };
 

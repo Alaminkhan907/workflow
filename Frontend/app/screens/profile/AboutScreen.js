@@ -21,7 +21,7 @@ const AboutScreen = ({ navigation }) => {
       {/* User Info */}
       <Text style={styles.nameText}>Jan</Text>
       <Text style={styles.usernameText}>@Jantheboss</Text>
-      <Text style={styles.roleText}>Project Manager</Text>
+      <Text style={styles.roleText}>Manager</Text>
 
       {/* Edit Profile Button */}
       <TouchableOpacity style={styles.editProfileButton}>

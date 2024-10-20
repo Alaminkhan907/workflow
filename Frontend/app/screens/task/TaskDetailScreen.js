@@ -7,21 +7,22 @@ import {
   StyleSheet,
 } from "react-native";
 import { FontAwesome, Entypo } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
-const TaskDetailScreen = () => {
+const TaskDetailScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       {/* Header with Edit and Delete icons */}
       <View style={styles.header}>
-        <Text style={styles.date}>12/10/2024 12:00</Text>
-        <View style={styles.icons}>
-          <TouchableOpacity style={styles.icon}>
-            <FontAwesome name="pencil" size={24} color="black" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.icon}>
-            <FontAwesome name="trash" size={24} color="black" />
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          onPress={() => {
+            console.log("Back button pressed");
+            navigation.replace("Task");
+          }}
+        >
+          <Ionicons name="arrow-back" size={24} color="black" />
+        </TouchableOpacity>
+        <Text style={styles.projectTitle}>Add Task</Text>
       </View>
 
       {/* Description input */}
@@ -52,6 +53,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F9F9F9",
     padding: 20,
+    marginTop: 60,
   },
   header: {
     flexDirection: "row",

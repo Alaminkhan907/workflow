@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-const NewProjectScreen = ({ navigation }) => {
+const TaskScreen = ({ navigation }) => {
   const [tasks, setTasks] = useState([
     { id: "1", name: "Task 1", date: "12/10/2024 12:00", team: ["KT", "RP"] },
     { id: "2", name: "Task 2", date: "12/10/2024 15:00", team: ["LS"] },
@@ -21,7 +21,7 @@ const NewProjectScreen = ({ navigation }) => {
     },
   ]);
   const handleClick = () => {
-    navigation.replace("AddTask");
+    navigation.replace("TaskDetailScreen");
   };
   const renderTask = ({ item }) => (
     <View style={styles.taskCard}>
@@ -42,8 +42,10 @@ const NewProjectScreen = ({ navigation }) => {
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => {
-            console.log("Back button pressed");
-            navigation.replace("Project");
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "UserTabs" }],
+            });
           }}
         >
           <Ionicons name="arrow-back" size={24} color="black" />
@@ -123,4 +125,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NewProjectScreen;
+export default TaskScreen;

@@ -12,7 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
-const AddTaskScreen = ({ navigation }) => {
+const AddProjectScreen = ({ navigation }) => {
   // State to hold task details
   const [taskName, setTaskName] = useState("");
   const [dueDate, setDueDate] = useState(new Date());
@@ -51,7 +51,7 @@ const AddTaskScreen = ({ navigation }) => {
         );
         console.log("Response from server: ", data);
 
-        navigation.replace("NewProject");
+        navigation.replace("Project");
       } else {
         const errorData = await response.json();
         console.error("Error creating task: ", errorData);
@@ -91,8 +91,7 @@ const AddTaskScreen = ({ navigation }) => {
       </TouchableOpacity>
 
       {/* Task Input Fields */}
-      <Text style={styles.title}>Add New Task</Text>
-
+      <Text style={styles.title}>Add New Project</Text>
       <TextInput
         style={styles.input}
         placeholder="Task Name"
@@ -148,7 +147,7 @@ const AddTaskScreen = ({ navigation }) => {
   );
 };
 
-export default AddTaskScreen;
+export default AddProjectScreen;
 
 const styles = StyleSheet.create({
   container: {
