@@ -7,7 +7,7 @@ const taskSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now, // Automatically set to the current date and time
+    default: Date.now,
   },
   dueDate: {
     type: Date,

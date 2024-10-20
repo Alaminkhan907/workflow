@@ -51,7 +51,7 @@ const AddProjectScreen = ({ navigation }) => {
         );
         console.log("Response from server: ", data);
 
-        navigation.replace("Project");
+        navigation.replace("ProjectEditScreen");
       } else {
         const errorData = await response.json();
         console.error("Error creating task: ", errorData);
@@ -83,7 +83,8 @@ const AddProjectScreen = ({ navigation }) => {
       <TouchableOpacity
         onPress={() => {
           console.log("Back button pressed");
-          navigation.replace("NewProject");
+          navigation.replace("Project");
+          // navigation.goBack();
         }}
         style={styles.backButton}
       >
@@ -153,6 +154,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    marginTop: 60,
     backgroundColor: "#f5f5f5",
   },
   backButton: {

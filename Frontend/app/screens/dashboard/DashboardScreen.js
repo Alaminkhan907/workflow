@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,57 +8,60 @@ import {
 } from "react-native";
 
 const DashboardScreen = ({ navigation }) => {
+  const [projects, setProjects] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:3000/gettask")
+      .then((res) => res.json())
+      .then((data) => setProjects(data));
+  }, []);
+
+  const totalProjects = projects.length;
+  const pendingProjects = projects.filter(
+    (project) => project.status === "pending"
+  ).length;
+
+  const sortedProjects = projects.sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
+
   return (
     <ScrollView style={styles.container}>
-      {/* Header Section */}
-      <View style={styles.header}>
+      {/* <View style={styles.header}>
         <Text style={styles.headerText}>Dashboard</Text>
-      </View>
+      </View> */}
 
-      {/* Statistics Section */}
       <View style={styles.statsSection}>
         <Text style={styles.sectionTitle}>Statistics</Text>
         <View style={styles.statsRow}>
           <View style={styles.statBox}>
-            <Text style={styles.statNumber}>12</Text>
-            <Text style={styles.statLabel}>Tasks Completed</Text>
+            <Text style={styles.statNumber}>{totalProjects}</Text>
+            <Text style={styles.statLabel}>Total Projects</Text>
           </View>
           <View style={styles.statBox}>
-            <Text style={styles.statNumber}>5</Text>
-            <Text style={styles.statLabel}>Pending Tasks</Text>
+            <Text style={styles.statNumber}>{pendingProjects}</Text>
+            <Text style={styles.statLabel}>Pending Projects</Text>
           </View>
         </View>
       </View>
 
-      {/* Recent Tasks Section */}
       <View style={styles.recentTasksSection}>
-        <Text style={styles.sectionTitle}>Recent Tasks</Text>
-        <View style={styles.taskItem}>
-          <Text style={styles.taskTitle}>Finish Dashboard Design</Text>
-          <Text style={styles.taskDate}>Due: 12/10/2024</Text>
-        </View>
-        <View style={styles.taskItem}>
-          <Text style={styles.taskTitle}>Review Project Proposal</Text>
-          <Text style={styles.taskDate}>Due: 14/10/2024</Text>
-        </View>
-      </View>
+        <Text style={styles.sectionTitle}>Last Activity</Text>
 
-      {/* Navigation Section */}
-      {/* <View style={styles.navigationSection}>
-        <Text style={styles.sectionTitle}>Navigate to:</Text>
-        <TouchableOpacity
-          style={styles.navButton}
-          onPress={() => navigation.navigate("Projects")}
-        >
-          <Text style={styles.navButtonText}>Projects</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.navButton}
-          onPress={() => navigation.navigate("Tasks")}
-        >
-          <Text style={styles.navButtonText}>Tasks</Text>
-        </TouchableOpacity>
-      </View> */}
+        {/* Map over the sorted projects to display each one */}
+        {sortedProjects.map((project) => (
+          <View key={project._id} style={styles.taskItem}>
+            <Text style={styles.taskTitle}>{project.name}</Text>
+            <Text style={styles.taskDate}>
+              Created At: {new Date(project.createdAt).toLocaleString()}
+            </Text>
+            <Text style={styles.taskDate}>
+              Due Date: {new Date(project.dueDate).toLocaleString()}
+            </Text>
+            <Text style={styles.taskStatus}>Status: {project.status}</Text>
+          </View>
+        ))}
+      </View>
     </ScrollView>
   );
 };
@@ -132,20 +135,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#777",
   },
-  navigationSection: {
-    marginBottom: 20,
-  },
-  navButton: {
-    backgroundColor: "#2E86C1",
-    paddingVertical: 15,
-    borderRadius: 10,
-    marginBottom: 10,
-    alignItems: "center",
-  },
-  navButtonText: {
-    color: "#FFF",
-    fontSize: 16,
-    fontWeight: "600",
+  taskStatus: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#FF6347",
   },
 });
 

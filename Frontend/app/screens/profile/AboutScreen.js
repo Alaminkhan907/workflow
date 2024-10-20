@@ -4,8 +4,7 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
 const AboutScreen = ({ navigation }) => {
   const handleLogout = () => {
-    // Add your logout logic here
-    navigation.navigate("Login"); // Navigate to login screen
+    navigation.navigate("Login");
   };
 
   return (

@@ -34,13 +34,13 @@ const LoginScreen = ({ navigation }) => {
       email === credentials.manager.email &&
       password === credentials.manager.password
     ) {
-      Alert.alert("Success", "Logged in as Manager");
+      // Alert.alert("Success", "Logged in as Manager");
       navigation.replace("UserTabs", { role: credentials.manager.role });
     } else if (
       email === credentials.worker.email &&
       password === credentials.worker.password
     ) {
-      Alert.alert("Success", "Logged in as Worker");
+      // Alert.alert("Success", "Logged in as Worker");
       navigation.replace("UserTabs", { role: credentials.worker.role });
     } else {
       Alert.alert("Error", "Invalid email or password");

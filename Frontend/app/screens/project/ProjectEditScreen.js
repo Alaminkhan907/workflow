@@ -94,7 +94,8 @@ const ProjectEditScreen = ({ route, navigation }) => {
       <TouchableOpacity
         onPress={() => {
           console.log("Back button pressed");
-          navigation.replace("NewProject");
+          // navigation.replace("Project");
+          navigation.goBack();
         }}
         style={styles.backButton}
       >
@@ -166,6 +167,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    marginTop: 60,
     backgroundColor: "#f5f5f5",
   },
   backButton: {

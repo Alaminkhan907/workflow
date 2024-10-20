@@ -1,5 +1,13 @@
 import React from "react";
-import { View, Text, Button, Alert, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Button,
+  Alert,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 const ProjectDetailScreen = ({ route, navigation }) => {
   const { project } = route.params;
@@ -35,6 +43,15 @@ const ProjectDetailScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        onPress={() => {
+          console.log("Back button pressed");
+          navigation.replace("Project");
+        }}
+        style={styles.backButton}
+      >
+        <Ionicons name="arrow-back" size={24} color="black" />
+      </TouchableOpacity>
       <Text style={styles.title}>{project.name}</Text>
       <Text style={styles.description}>{project.description}</Text>
       <Text style={styles.details}>{project.details}</Text>
@@ -52,7 +69,10 @@ const ProjectDetailScreen = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
+    flex: 1,
+    backgroundColor: "#F9F9F9",
+    padding: 20,
+    marginTop: 60,
   },
   title: {
     fontSize: 24,

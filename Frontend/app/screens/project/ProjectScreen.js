@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Button,
   TextInput,
+  ScrollView,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
@@ -92,6 +93,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F9F9F9",
     padding: 20,
+    // marginTop: 60,
   },
   header: {
     flexDirection: "row",

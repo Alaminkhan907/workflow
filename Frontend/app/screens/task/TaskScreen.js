@@ -6,6 +6,7 @@ import {
   FlatList,
   TouchableOpacity,
   Button,
+  ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -76,6 +77,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     padding: 20,
+    // marginTop: 60,
   },
   header: {
     flexDirection: "row",
