@@ -7,7 +7,7 @@ const ProjectDetailScreen = ({ route, navigation }) => {
 
   const handleEdit = async () => {
     try {
-      navigation.navigate("EditProjectScreen", { projectId: project._id });
+      navigation.navigate("ProjectEditScreen", { projectId: project._id });
     } catch (error) {
       Alert.alert("Error", "Could not navigate to edit screen.");
     }

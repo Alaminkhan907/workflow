@@ -13,6 +13,7 @@ import TaskDetailScreen from "../screens/task/TaskDetailScreen";
 import ProjectOne from "../screens/project/ProjectOne";
 import AddTaskScreen from "../screens/task/AddTaskScreen";
 import ProjectDetailScreen from "../screens/project/ProjectDetailScreen";
+import ProjectEditScreen from "../screens/project/ProjectEditScreen";
 
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
@@ -78,6 +79,7 @@ const AppNavigator = () => {
         </Stack.Group>
 
         <Stack.Screen name="Project" component={ProjectScreen} />
+        <Stack.Screen name="ProjectEditScreen" component={ProjectEditScreen} />
         <Stack.Screen
           name="ProjectDetailScreen"
           component={ProjectDetailScreen}

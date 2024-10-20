@@ -51,7 +51,6 @@ const AddTaskScreen = ({ navigation }) => {
         );
         console.log("Response from server: ", data);
 
-        // Navigate to a different screen (e.g., task list) after creation
         navigation.replace("NewProject");
       } else {
         const errorData = await response.json();
