@@ -1,0 +1,204 @@
+import React, { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  TextInput,
+  Button,
+  Alert,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { Picker } from "@react-native-picker/picker";
+import DateTimePicker from "@react-native-community/datetimepicker";
+
+const ProjectEditScreen = ({ route, navigation }) => {
+  const { projectId } = route.params;
+
+  const [taskName, setTaskName] = useState("");
+  const [dueDate, setDueDate] = useState(new Date());
+  const [description, setDescription] = useState("");
+  const [status, setStatus] = useState("pending");
+  const [assignee, setAssignee] = useState("");
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  // Fetch project data when the screen loads
+  useEffect(() => {
+    fetch(`http://localhost:3000/gettask/${projectId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setTaskName(data.name);
+        setDueDate(new Date(data.dueDate));
+        setDescription(data.description);
+        setStatus(data.status);
+        setAssignee(data.assignee);
+      })
+      .catch((error) => {
+        console.error("Error fetching project data: ", error);
+        Alert.alert("Error", "Failed to load project data.");
+      });
+  }, [projectId]);
+
+  const handleSubmit = async () => {
+    const updatedTask = {
+      name: taskName,
+      dueDate: dueDate.toISOString().split("T")[0],
+      description,
+      status,
+      assignee,
+      updatedAt: new Date(),
+    };
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/edittask/${projectId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedTask),
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        Alert.alert("Success", `Task "${taskName}" has been updated.`);
+        console.log("Updated task response: ", data);
+        navigation.replace("NewProject");
+      } else {
+        const errorData = await response.json();
+        console.error("Error updating task: ", errorData);
+        Alert.alert("Error", "Failed to update task on the server.");
+      }
+    } catch (error) {
+      console.error("Network error: ", error);
+      Alert.alert("Error", "An error occurred while updating the task.");
+    }
+  };
+
+  const showDatePickerModal = () => {
+    setShowDatePicker(true);
+  };
+
+  const handleDateChange = (event, selectedDate) => {
+    setShowDatePicker(false);
+    if (selectedDate) {
+      setDueDate(selectedDate);
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      {/* Back Button */}
+      <TouchableOpacity
+        onPress={() => {
+          console.log("Back button pressed");
+          // navigation.replace("Project");
+          navigation.goBack();
+        }}
+        style={styles.backButton}
+      >
+        <Ionicons name="arrow-back" size={24} color="black" />
+      </TouchableOpacity>
+
+      <Text style={styles.title}>Edit Task</Text>
+
+      <TextInput
+        style={styles.input}
+        placeholder="Task Name"
+        value={taskName}
+        onChangeText={setTaskName}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Description"
+        value={description}
+        onChangeText={setDescription}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Assignee"
+        value={assignee}
+        onChangeText={setAssignee}
+      />
+
+      {/* Date Picker */}
+      <TouchableOpacity onPress={showDatePickerModal} style={styles.input}>
+        <Text>
+          {dueDate ? dueDate.toISOString().split("T")[0] : "Select Due Date"}
+        </Text>
+      </TouchableOpacity>
+
+      {showDatePicker && (
+        <DateTimePicker
+          value={dueDate}
+          mode="date"
+          display="default"
+          onChange={handleDateChange}
+        />
+      )}
+
+      {/* Status Dropdown */}
+      <View style={styles.pickerContainer}>
+        <Text style={styles.label}>Status:</Text>
+        <Picker
+          selectedValue={status}
+          style={styles.picker}
+          onValueChange={(itemValue) => setStatus(itemValue)}
+        >
+          <Picker.Item label="Pending" value="pending" />
+          <Picker.Item label="In Progress" value="in_progress" />
+          <Picker.Item label="Completed" value="completed" />
+        </Picker>
+      </View>
+
+      {/* Submit Button */}
+      <Button title="Update Task" onPress={handleSubmit} />
+    </View>
+  );
+};
+
+export default ProjectEditScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    marginTop: 60,
+    backgroundColor: "#f5f5f5",
+  },
+  backButton: {
+    alignSelf: "flex-start",
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 10,
+    marginVertical: 10,
+    borderRadius: 5,
+    backgroundColor: "#fff",
+  },
+  pickerContainer: {
+    marginVertical: 10,
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  picker: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 10,
+    backgroundColor: "#fff",
+  },
+});
