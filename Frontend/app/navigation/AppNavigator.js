@@ -13,6 +13,8 @@ import AddProjectScreen from "../screens/project/AddProjectScreen";
 import ProjectDetailScreen from "../screens/project/ProjectDetailScreen";
 import ProjectEditScreen from "../screens/project/ProjectEditScreen";
 import TaskScreen from "../screens/task/TaskScreen";
+import SignupScreen from "../screens/authentication/SignupScreen";
+import ForgotPasswordScreen from "../screens/authentication/ForgotScreen";
 
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
@@ -70,6 +72,8 @@ const AppNavigator = ({ route }) => {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Signup" component={SignupScreen} />
+        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
         <Stack.Screen name="UserTabs" component={UserTabs} />
         <Stack.Screen name="NewProject" component={NewProjectScreen} />
 

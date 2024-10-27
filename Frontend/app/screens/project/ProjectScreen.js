@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -7,29 +7,43 @@ import {
   TouchableOpacity,
   Button,
   TextInput,
-  ScrollView,
 } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import { useFocusEffect } from "@react-navigation/native";
 
 const ProjectScreen = ({ navigation }) => {
   const [projects, setProjects] = useState([]);
-  useEffect(() => {
-    fetch("http://localhost:3000/gettask")
-      .then((res) => res.json())
-      .then((data) => setProjects(data));
-  }, []);
+  const [loading, setLoading] = useState(true);
 
-  const [date, setDate] = useState(new Date());
-  const [showPicker, setShowPicker] = useState(false);
-
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShowPicker(false);
-    setDate(currentDate);
+  const fetchProjects = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch("http://localhost:3000/gettask");
+      const data = await response.json();
+      setProjects(data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+      setLoading(false);
+    }
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchProjects();
+    }, [])
+  );
+
   const handleClick = () => {
     navigation.replace("AddProjectScreen");
   };
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -60,28 +74,6 @@ const ProjectScreen = ({ navigation }) => {
           </TouchableOpacity>
         )}
       />
-      {/* Current Date Section
-      <View style={styles.dateSection}>
-        <Text style={styles.currentDateTitle}>Current date</Text>
-
-        <View style={styles.datePickerSection}>
-          <Text style={styles.selectDateLabel}>Select date</Text>
-          <TextInput
-            style={styles.dateInput}
-            value={date.toLocaleDateString()}
-            editable={false}
-          />
-          <Button title="Select Date" onPress={() => setShowPicker(true)} />
-          {showPicker && (
-            <DateTimePicker
-              value={date}
-              mode="date"
-              display="default"
-              onChange={onChange}
-            />
-          )}
-        </View>
-      </View> */}
     </View>
   );
 };
@@ -93,7 +85,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F9F9F9",
     padding: 20,
-    // marginTop: 60,
   },
   header: {
     flexDirection: "row",
@@ -128,32 +119,7 @@ const styles = StyleSheet.create({
     color: "#777",
     marginTop: 5,
   },
-  dateSection: {
-    marginTop: 20,
-  },
-  currentDateTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  datePickerSection: {
-    backgroundColor: "#F0F0F0",
-    padding: 15,
-    borderRadius: 10,
-    marginTop: 10,
-  },
-  selectDateLabel: {
-    fontSize: 14,
-    marginBottom: 10,
-  },
   teamContainer: {
     flexDirection: "row",
-  },
-  dateInput: {
-    backgroundColor: "#FFFFFF",
-    borderColor: "#CCCCCC",
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 10,
   },
 });
