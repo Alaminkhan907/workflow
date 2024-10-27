@@ -15,14 +15,39 @@ const SignupScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     if (!name || !email || !password || !role) {
       Alert.alert("Error", "Please fill out all the fields");
       return;
     }
+    const signupData = {
+      name,
+      email,
+      password,
+      role,
+    };
 
-    Alert.alert("Success", `Registered as ${role}`);
-    navigation.replace("LoginScreen");
+    try {
+      const response = await fetch("http://localhost:3000/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(signupData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        Alert.alert("Success", `Registered as ${data.role}`);
+        navigation.replace("Login");
+      } else {
+        const errorData = await response.json();
+        Alert.alert("Error", errorData.message || "Failed to sign up");
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+      Alert.alert("Error", "Failed to connect to the server.");
+    }
   };
 
   return (
