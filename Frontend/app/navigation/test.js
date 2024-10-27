@@ -97,7 +97,7 @@ const UserTabs = () => (
   </Tab.Navigator>
 );
 
-const AppNavigator = () => {
+const Test = () => {
   return (
     <NavigationContainer>
       <UserTabs />
@@ -105,4 +105,4 @@ const AppNavigator = () => {
   );
 };
 
-export default AppNavigator;
+export default Test;

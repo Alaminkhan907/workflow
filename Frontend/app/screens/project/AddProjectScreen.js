@@ -51,7 +51,7 @@ const AddProjectScreen = ({ navigation }) => {
         );
         console.log("Response from server: ", data);
 
-        navigation.replace("ProjectEditScreen");
+        navigation.replace("Project");
       } else {
         const errorData = await response.json();
         console.error("Error creating task: ", errorData);
@@ -154,7 +154,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    marginTop: 60,
     backgroundColor: "#f5f5f5",
   },
   backButton: {

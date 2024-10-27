@@ -63,12 +63,17 @@ const LoginScreen = ({ navigation }) => {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <Text>Forgot Password?</Text>
+      <TouchableOpacity onPress={() => navigation.replace("ForgotPassword")}>
+        <Text style={styles.loginLinkText}>Forgot Password ?</Text>
+      </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
       <Text>or</Text>
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.replace("Signup")}
+      >
         <Text style={styles.buttonText}>Sign up</Text>
       </TouchableOpacity>
     </View>
