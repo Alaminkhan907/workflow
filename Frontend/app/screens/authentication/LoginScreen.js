@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -7,44 +7,78 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const credentials = {
-    manager: {
-      email: "manager",
-      password: "manager",
-      role: "manager",
-    },
-    worker: {
-      email: "worker",
-      password: "worker",
-      role: "worker",
-    },
-  };
-
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert("Error", "manager , manager");
+      Alert.alert("Error", "Please fill in both email and password");
       return;
     }
-    if (
-      email === credentials.manager.email &&
-      password === credentials.manager.password
-    ) {
-      // Alert.alert("Success", "Logged in as Manager");
-      navigation.replace("UserTabs", { role: credentials.manager.role });
-    } else if (
-      email === credentials.worker.email &&
-      password === credentials.worker.password
-    ) {
-      // Alert.alert("Success", "Logged in as Worker");
-      navigation.replace("UserTabs", { role: credentials.worker.role });
-    } else {
-      Alert.alert("Error", "Invalid email or password");
+
+    const loginData = { email, password };
+
+    try {
+      const response = await fetch("http://localhost:3000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(loginData),
+      });
+      console.log(loginData);
+      const data = await response.json();
+
+      if (response.ok) {
+        const { role } = data;
+
+        const loginInfo = {
+          email,
+          role,
+          loginTime: Date.now(),
+        };
+        await AsyncStorage.setItem("loginInfo", JSON.stringify(loginInfo));
+
+        navigation.replace("UserTabs", { role });
+      } else {
+        Alert.alert("Error", data.message || "Login failed");
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+      Alert.alert("Error", "Failed to connect to the server");
     }
+  };
+
+  const checkLoginStatus = async () => {
+    try {
+      const loginInfo = await AsyncStorage.getItem("loginInfo");
+      console.log("Login Info:", loginInfo);
+      if (loginInfo) {
+        const { loginTime, role } = JSON.parse(loginInfo);
+        const currentTime = Date.now();
+
+        if (currentTime - loginTime < 3600000) {
+          navigation.replace("UserTabs", { role });
+        } else {
+          await AsyncStorage.removeItem("loginInfo");
+        }
+      }
+    } catch (error) {
+      console.error("Error checking login status:", error);
+    }
+    useEffect(() => {
+      checkLoginStatus();
+    }, []);
+
+    useFocusEffect(() => {
+      React.useCallback(() => {
+        checkLoginStatus();
+      });
+    }, []);
   };
 
   return (
