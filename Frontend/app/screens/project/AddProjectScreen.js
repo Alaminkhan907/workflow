@@ -83,7 +83,7 @@ const AddProjectScreen = ({ navigation }) => {
       <TouchableOpacity
         onPress={() => {
           console.log("Back button pressed");
-          navigation.replace("Project");
+          navigation.navigate("UserTabs", { screen: "Project" });
           // navigation.goBack();
         }}
         style={styles.backButton}

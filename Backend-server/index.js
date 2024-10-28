@@ -16,7 +16,7 @@ app.use(express.json());
 
 // MongoDB connection using mongoose
 mongoose.set("strictQuery", true);
-mongoose.connect("mongodb://127.0.0.1:27017/workflow", {
+mongoose.connect("mongodb://mongo:27017/workflow", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -33,6 +33,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/addtask", (req, res) => {
+  console.log("Request Body:", req.body); // Logs the request body
   if (!req.body) {
     return res.status(400).send({ error: "Request body cannot be empty." });
   }
