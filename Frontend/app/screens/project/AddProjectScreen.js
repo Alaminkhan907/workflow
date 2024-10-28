@@ -15,7 +15,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 const AddProjectScreen = ({ navigation }) => {
   // State to hold task details
   const [taskName, setTaskName] = useState("");
-  const [dueDate, setDueDate] = useState(new Date());
+  const [dueDate, setDueDate] = useState(null);
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("pending");
   const [assignee, setAssignee] = useState("");
@@ -23,6 +23,21 @@ const AddProjectScreen = ({ navigation }) => {
 
   // Function to handle task submission
   const handleSubmit = async () => {
+    if (!taskName.trim()) {
+      Alert.alert("Validation Error", "Please enter the task name.");
+      return;
+    }
+
+  
+    if (!assignee.trim()) {
+      Alert.alert("Validation Error", "Please enter the assignee.");
+      return;
+    }
+  
+    if (!dueDate) {
+      Alert.alert("Validation Error", "Please select a due date.");
+      return;
+    }
     const newTask = {
       name: taskName,
       dueDate: dueDate.toISOString().split("T")[0], // Format date as YYYY-MM-DD
@@ -121,7 +136,7 @@ const AddProjectScreen = ({ navigation }) => {
 
       {showDatePicker && (
         <DateTimePicker
-          value={dueDate}
+          value={dueDate || new Date()}
           mode="date"
           display="default"
           onChange={handleDateChange}
