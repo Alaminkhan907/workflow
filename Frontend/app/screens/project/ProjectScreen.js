@@ -49,7 +49,7 @@ const ProjectScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Projects</Text>
+        <Text style={styles.headerText}>List of Projects</Text>
         <TouchableOpacity style={styles.newProjectButton}>
           <Text style={styles.newProjectText} onPress={handleClick}>
             New project →

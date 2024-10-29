@@ -23,7 +23,7 @@ const ProjectEditScreen = ({ route, navigation }) => {
   const [assignee, setAssignee] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  // Fetch project data when the screen loads
+  
   useEffect(() => {
     fetch(`${API_URL}/gettask/${projectId}`)
       .then((response) => response.json())

@@ -11,7 +11,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = ({ navigation, onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -43,7 +43,7 @@ const LoginScreen = ({ navigation }) => {
           loginTime: Date.now(),
         };
         await AsyncStorage.setItem("loginInfo", JSON.stringify(loginInfo));
-
+        onLogin();
         navigation.replace("UserTabs", { role });
       } else {
         Alert.alert("Error", data.message || "Login failed");
@@ -63,6 +63,7 @@ const LoginScreen = ({ navigation }) => {
         const currentTime = Date.now();
 
         if (currentTime - loginTime < 3600000) {
+          onLogin();
           navigation.replace("UserTabs", { role });
         } else {
           await AsyncStorage.removeItem("loginInfo");
