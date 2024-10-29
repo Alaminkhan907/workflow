@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   backend:
     build: ./Backend-server
@@ -15,3 +14,15 @@ services:
       - "27017:27017"
     volumes:
       - ./mongodb:/data/db
+
+  expo:
+    build: ./Frontend
+    ports:
+      - "19006:19006"
+    command: ["npx", "expo", "start", "--tunnel"]
+    networks:
+      - shared-network
+
+networks:
+  shared-network:
+    driver: bridge

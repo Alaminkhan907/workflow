@@ -5,12 +5,15 @@ const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 require("dotenv").config();
+mongoose.set('strictQuery', true);
 
 const Task = require("./model");
 const User = require("./userModel");
 
 const app = express();
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || '0.0.0.0';
+
 
 app.use(
   cors({
@@ -21,7 +24,12 @@ app.use(bodyParser.json());
 app.use(express.json());
 
 // MongoDB connection
-mongoose.connect("mongodb://127.0.0.1:27017/workflow", {
+// mongoose.connect("mongodb://127.0.0.1:27017/workflow", {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// });
+
+mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -210,6 +218,6 @@ app.delete("/deletetask/:id",  (req, res) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+app.listen(PORT, HOST, () => {
+  console.log(`Server running on http://${HOST}:${PORT}`);
 });
