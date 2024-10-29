@@ -94,15 +94,16 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   headerText: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: "bold",
   },
-  newProjectButton: {
-    backgroundColor: "#E0E0E0",
-    padding: 10,
-    borderRadius: 5,
-  },
+
   newProjectText: {
+    backgroundColor: "#5A81F7",
+    paddingVertical: 10,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+    color: "#fff",
     fontSize: 16,
   },
   projectCard: {

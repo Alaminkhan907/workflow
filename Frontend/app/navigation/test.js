@@ -49,6 +49,7 @@ const DashboardStack =()=>(
 const TaskStack =()=>(
   <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen name="Task" component={TaskScreen}/>
+    <Stack.Screen name="TaskDetailScreen" component={TaskDetailScreen}/>
   </Stack.Navigator>
 )
 const AuthenticationStack =({ onLogin })=>(
