@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { API_URL } from '@env';
 import {
   StyleSheet,
   Text,
@@ -24,7 +25,7 @@ const ProjectEditScreen = ({ route, navigation }) => {
 
   // Fetch project data when the screen loads
   useEffect(() => {
-    fetch(`http://localhost:3000/gettask/${projectId}`)
+    fetch(`${API_URL}/gettask/${projectId}`)
       .then((response) => response.json())
       .then((data) => {
         setTaskName(data.name);
@@ -51,7 +52,7 @@ const ProjectEditScreen = ({ route, navigation }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/edittask/${projectId}`,
+        `${API_URL}/edittask/${projectId}`,
         {
           method: "PUT",
           headers: {

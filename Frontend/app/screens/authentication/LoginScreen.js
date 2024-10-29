@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { API_URL } from '@env';
 import {
   View,
   Text,
@@ -23,7 +24,7 @@ const LoginScreen = ({ navigation }) => {
     const loginData = { email, password };
 
     try {
-      const response = await fetch("http://localhost:3000/login", {
+      const response = await fetch(`${API_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

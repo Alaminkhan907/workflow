@@ -1,4 +1,5 @@
 import React from "react";
+import { API_URL } from '@env';
 import {
   View,
   Text,
@@ -24,7 +25,7 @@ const ProjectDetailScreen = ({ route, navigation }) => {
   const handleDelete = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/deletetask/${project._id}`,
+        `${API_URL}/deletetask/${project._id}`,
         {
           method: "DELETE",
         }

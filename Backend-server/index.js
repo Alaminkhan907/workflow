@@ -110,7 +110,7 @@ app.post("/login", async (req, res) => {
 });
 
 // Protected Task Route
-app.post("/addtask", protect, (req, res) => {
+app.post("/addtask", (req, res) => {
   const { name, dueDate, description, status, assignee } = req.body;
 
   const newTask = new Task({ name, dueDate, description, status, assignee });
@@ -180,7 +180,7 @@ app.get("/gettask/:id", (req, res) => {
 // });
 
 // Route to edit a task
-app.put("/edittask/:id", protect, (req, res) => {
+app.put("/edittask/:id",  (req, res) => {
   Task.findByIdAndUpdate(
     req.params.id,
     req.body,
@@ -198,7 +198,7 @@ app.put("/edittask/:id", protect, (req, res) => {
 });
 
 // Route to delete a task
-app.delete("/deletetask/:id", protect, (req, res) => {
+app.delete("/deletetask/:id",  (req, res) => {
   Task.findByIdAndDelete(req.params.id, (err, task) => {
     if (err) {
       return res.status(500).send(err);

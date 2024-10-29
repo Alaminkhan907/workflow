@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { API_URL } from '@env';
 import {
   View,
   Text,
@@ -18,7 +19,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/forgot-password", {
+      const response = await fetch(`${API_URL}/forgot-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { API_URL } from '@env';
 import {
   View,
   Text,
@@ -22,7 +23,7 @@ const DashboardScreen = ({ navigation }) => {
   const fetchProjects = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:3000/gettask");
+      const response = await fetch(`${API_URL}/gettask`);
       const data = await response.json();
       setProjects(data);
       setLoading(false);

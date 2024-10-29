@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { API_URL } from '@env';
 import {
   StyleSheet,
   Text,
@@ -35,7 +36,7 @@ const AddProjectScreen = ({ navigation }) => {
     console.log("Task Created: ", newTask);
 
     try {
-      const response = await fetch("http://localhost:3000/addtask", {
+      const response = await fetch(`${API_URL}/addtask`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

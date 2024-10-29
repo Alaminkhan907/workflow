@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { API_URL } from '@env';
 import {
   View,
   Text,
@@ -28,7 +29,7 @@ const SignupScreen = ({ navigation }) => {
     };
 
     try {
-      const response = await fetch("http://localhost:3000/signup", {
+      const response = await fetch(`${API_URL}/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
