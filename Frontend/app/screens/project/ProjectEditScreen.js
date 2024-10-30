@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { API_URL } from "@env";
 import {
   StyleSheet,
   Text,
@@ -22,9 +23,8 @@ const ProjectEditScreen = ({ route, navigation }) => {
   const [assignee, setAssignee] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  // Fetch project data when the screen loads
   useEffect(() => {
-    fetch(`http://localhost:3000/gettask/${projectId}`)
+    fetch(`${API_URL}/gettask/${projectId}`)
       .then((response) => response.json())
       .then((data) => {
         setTaskName(data.name);
@@ -50,55 +50,35 @@ const ProjectEditScreen = ({ route, navigation }) => {
     };
 
     try {
-      const response = await fetch(
-        `http://localhost:3000/edittask/${projectId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedTask),
-        }
-      );
+      const response = await fetch(`${API_URL}/edittask/${projectId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedTask),
+      });
 
       if (response.ok) {
-        const data = await response.json();
         Alert.alert("Success", `Task "${taskName}" has been updated.`);
-        console.log("Updated task response: ", data);
         navigation.replace("NewProject");
       } else {
-        const errorData = await response.json();
-        console.error("Error updating task: ", errorData);
         Alert.alert("Error", "Failed to update task on the server.");
       }
     } catch (error) {
-      console.error("Network error: ", error);
       Alert.alert("Error", "An error occurred while updating the task.");
     }
   };
 
-  const showDatePickerModal = () => {
-    setShowDatePicker(true);
-  };
+  const showDatePickerModal = () => setShowDatePicker(true);
 
   const handleDateChange = (event, selectedDate) => {
     setShowDatePicker(false);
-    if (selectedDate) {
-      setDueDate(selectedDate);
-    }
+    if (selectedDate) setDueDate(selectedDate);
   };
 
   return (
     <View style={styles.container}>
-      {/* Back Button */}
-      <TouchableOpacity
-        onPress={() => {
-          console.log("Back button pressed");
-          // navigation.replace("Project");
-          navigation.goBack();
-        }}
-        style={styles.backButton}
-      >
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
         <Ionicons name="arrow-back" size={24} color="black" />
       </TouchableOpacity>
 
@@ -126,8 +106,8 @@ const ProjectEditScreen = ({ route, navigation }) => {
       />
 
       {/* Date Picker */}
-      <TouchableOpacity onPress={showDatePickerModal} style={styles.input}>
-        <Text>
+      <TouchableOpacity onPress={showDatePickerModal} style={styles.dateInput}>
+        <Text style={styles.dateText}>
           {dueDate ? dueDate.toISOString().split("T")[0] : "Select Due Date"}
         </Text>
       </TouchableOpacity>
@@ -141,7 +121,7 @@ const ProjectEditScreen = ({ route, navigation }) => {
         />
       )}
 
-      {/* Status Dropdown */}
+      {/* Status Picker */}
       <View style={styles.pickerContainer}>
         <Text style={styles.label}>Status:</Text>
         <Picker
@@ -155,8 +135,9 @@ const ProjectEditScreen = ({ route, navigation }) => {
         </Picker>
       </View>
 
-      {/* Submit Button */}
-      <Button title="Update Task" onPress={handleSubmit} />
+      <TouchableOpacity style={styles.updateButton} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>Update Task</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -167,38 +148,68 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    marginTop: 60,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#f8f9fa",
   },
   backButton: {
-    alignSelf: "flex-start",
-    marginBottom: 20,
+    position: "absolute",
+    top: 20,
+    left: 10,
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: "bold",
-    marginBottom: 20,
     textAlign: "center",
+    marginBottom: 30,
+    color: "#333",
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    marginVertical: 10,
-    borderRadius: 5,
+    borderColor: "#ddd",
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
     backgroundColor: "#fff",
+    marginBottom: 15,
+  },
+  dateInput: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 8,
+    padding: 12,
+    justifyContent: "center",
+    backgroundColor: "#fff",
+    marginBottom: 15,
+  },
+  dateText: {
+    fontSize: 16,
+    color: "#333",
   },
   pickerContainer: {
     marginVertical: 10,
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#ddd",
   },
   label: {
     fontSize: 16,
-    marginBottom: 5,
+    margin: 10,
+    color: "#555",
   },
   picker: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    backgroundColor: "#fff",
+    height: 50,
+    width: "100%",
+  },
+  updateButton: {
+    backgroundColor: "#007BFF",
+    borderRadius: 8,
+    paddingVertical: 15,
+    alignItems: "center",
+    marginTop: 20,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "600",
   },
 });

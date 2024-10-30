@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { API_URL } from '@env';
 import {
   StyleSheet,
   Text,
@@ -13,7 +14,7 @@ import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 const AddProjectScreen = ({ navigation }) => {
-  // State to hold task details
+  
   const [taskName, setTaskName] = useState("");
   const [dueDate, setDueDate] = useState(new Date());
   const [description, setDescription] = useState("");
@@ -21,11 +22,11 @@ const AddProjectScreen = ({ navigation }) => {
   const [assignee, setAssignee] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  // Function to handle task submission
+
   const handleSubmit = async () => {
     const newTask = {
       name: taskName,
-      dueDate: dueDate.toISOString().split("T")[0], // Format date as YYYY-MM-DD
+      dueDate: dueDate.toISOString().split("T")[0], 
       description: description,
       status: status,
       assignee: assignee,
@@ -35,23 +36,23 @@ const AddProjectScreen = ({ navigation }) => {
     console.log("Task Created: ", newTask);
 
     try {
-      const response = await fetch("http://localhost:3000/addtask", {
+      const response = await fetch(`${API_URL}/addtask`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newTask), // Convert the task data to JSON
+        body: JSON.stringify(newTask), 
       });
 
       if (response.ok) {
-        const data = await response.json(); // Parse the response JSON
+        const data = await response.json();
         Alert.alert(
           "Task Created",
           `Task "${taskName}" has been created on the server.`
         );
         console.log("Response from server: ", data);
 
-        navigation.replace("ProjectEditScreen");
+        navigation.replace("Project");
       } else {
         const errorData = await response.json();
         console.error("Error creating task: ", errorData);
@@ -71,10 +72,9 @@ const AddProjectScreen = ({ navigation }) => {
   };
 
   const handleDateChange = (event, selectedDate) => {
-    setShowDatePicker(false); // Close the picker
+    setShowDatePicker(false); 
     if (selectedDate) {
-      setDueDate(selectedDate); // Set the selected date
-    }
+      setDueDate(selectedDate); }
   };
 
   return (
@@ -154,7 +154,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    marginTop: 60,
     backgroundColor: "#f5f5f5",
   },
   backButton: {

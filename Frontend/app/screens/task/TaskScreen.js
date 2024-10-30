@@ -1,130 +1,35 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-  Button,
-  ScrollView,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import React from 'react';
+import { View, StyleSheet, Text } from 'react-native';
+import { Table, Row, Rows } from 'react-native-table-component';
 
-const TaskScreen = ({ navigation }) => {
-  const [tasks, setTasks] = useState([
-    { id: "1", name: "Task 1", date: "12/10/2024 12:00", team: ["KT", "RP"] },
-    { id: "2", name: "Task 2", date: "12/10/2024 15:00", team: ["LS"] },
-    {
-      id: "3",
-      name: "Task 3",
-      date: "13/10/2024 11:00",
-      team: ["LS", "KT", "RP"],
-    },
-  ]);
-  const handleClick = () => {
-    navigation.replace("TaskDetailScreen");
-  };
-  const renderTask = ({ item }) => (
-    <View style={styles.taskCard}>
-      <Text style={styles.taskName}>{item.name}</Text>
-      <Text style={styles.taskDate}>{item.date}</Text>
-      <View style={styles.teamContainer}>
-        {item.team.map((member, index) => (
-          <Text key={`${item.id}-${index}`} style={styles.teamMember}>
-            {member}
-          </Text>
-        ))}
-      </View>
-    </View>
-  );
+const TaskScreen = () => {
+  const tableHead = ['Task', 'Deadline', 'Progress'];
+  const tableData = [
+    ['2', '3', '4'],
+    ['b', 'c', 'd'],
+    [ '2', '3', '45'],
+  ];
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.reset({
-              index: 0,
-              routes: [{ name: "UserTabs" }],
-            });
-          }}
-        >
-          <Ionicons name="arrow-back" size={24} color="black" />
-        </TouchableOpacity>
-        <Text style={styles.projectTitle}>New Task</Text>
-        <TouchableOpacity>
-          <Ionicons name="pencil" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.addTaskSection}>
-        <Text style={styles.addTaskText}>Add Task</Text>
-        <TouchableOpacity>
-          <Ionicons name="add" size={24} color="black" onPress={handleClick} />
-        </TouchableOpacity>
-      </View>
-      <FlatList
-        data={tasks}
-        keyExtractor={(item) => item.id}
-        renderItem={renderTask}
-        style={styles.taskList}
-      />
+      <Text style={styles.header}>New Project</Text>
+      <Table borderStyle={{ borderWidth: 1, borderColor: '#c8e1ff' }}>
+        <Row data={tableHead} style={styles.head} textStyle={styles.text} />
+        <Rows data={tableData} textStyle={styles.text} />
+      </Table>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    padding: 20,
-    // marginTop: 60,
-  },
+  container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
   header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  projectTitle: {
     fontSize: 24,
-    fontWeight: "bold",
-  },
-  addTaskSection: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    fontWeight: 'bold',
     marginBottom: 20,
   },
-  addTaskText: {
-    fontSize: 18,
-  },
-  taskList: {
-    marginTop: 10,
-  },
-  taskCard: {
-    backgroundColor: "#F0F0F0",
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 10,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  taskName: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  taskDate: {
-    fontSize: 14,
-    color: "#555",
-  },
-  teamContainer: {
-    flexDirection: "row",
-  },
-  teamMember: {
-    fontSize: 14,
-    marginLeft: 10,
-  },
+  head: { height: 40, backgroundColor: '#f1f8ff' },
+  text: { margin: 6,textAlign: 'center' },
 });
 
 export default TaskScreen;

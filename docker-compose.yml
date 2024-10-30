@@ -1,11 +1,10 @@
-version: '3.8'
 services:
   backend:
     build: ./Backend-server
     ports:
       - "3000:3000"
     environment:
-      - MONGO_URI=mongodb://mongo:27017/docker-node-mongo
+      - MONGO_URI=mongodb://mongo:27017/workflow
     depends_on:
       - mongo
 
@@ -15,3 +14,15 @@ services:
       - "27017:27017"
     volumes:
       - ./mongodb:/data/db
+
+  expo:
+    build: ./Frontend
+    ports:
+      - "19006:19006"
+    command: ["npx", "expo", "start", "--tunnel"]
+    networks:
+      - shared-network
+
+networks:
+  shared-network:
+    driver: bridge

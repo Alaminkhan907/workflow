@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { API_URL } from '@env';
 import {
   View,
   Text,
@@ -6,15 +7,37 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 
 const DashboardScreen = ({ navigation }) => {
-  const [projects, setProjects] = useState([]);
+  // const [projects, setProjects] = useState([]);
 
-  useEffect(() => {
-    fetch("http://localhost:3000/gettask")
-      .then((res) => res.json())
-      .then((data) => setProjects(data));
-  }, []);
+  // useEffect(() => {
+  //   fetch("http://localhost:3000/gettask")
+  //     .then((res) => res.json())
+  //     .then((data) => setProjects(data));
+  // }, []);
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchProjects = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_URL}/gettask`);
+      const data = await response.json();
+      setProjects(data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+      setLoading(false);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchProjects();
+    }, [])
+  );
 
   const totalProjects = projects.length;
   const pendingProjects = projects.filter(
@@ -24,7 +47,13 @@ const DashboardScreen = ({ navigation }) => {
   const sortedProjects = projects.sort(
     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
   );
-
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
   return (
     <ScrollView style={styles.container}>
       {/* <View style={styles.header}>

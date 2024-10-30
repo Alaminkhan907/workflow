@@ -2,21 +2,34 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 require("dotenv").config();
+mongoose.set('strictQuery', true);
 
 const Task = require("./model");
+const User = require("./userModel");
 
 const app = express();
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || '0.0.0.0';
 
-// Middleware configuration
-app.use(cors());
+
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 app.use(bodyParser.json());
 app.use(express.json());
 
-// MongoDB connection using mongoose
-mongoose.set("strictQuery", true);
-mongoose.connect("mongodb://127.0.0.1:27017/workflow", {
+// MongoDB connection
+// mongoose.connect("mongodb://127.0.0.1:27017/workflow", {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// });
+
+mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -24,7 +37,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/workflow", {
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
-  console.log("Successfully connected to MongoDB");
+  console.log("Connected to MongoDB");
 });
 
 // Test route
@@ -32,18 +45,83 @@ app.get("/", (req, res) => {
   res.send("Hello World from Node.js & MongoDB!");
 });
 
-app.post("/addtask", (req, res) => {
-  if (!req.body) {
-    return res.status(400).send({ error: "Request body cannot be empty." });
+// JWT Middleware
+const protect = async (req, res, next) => {
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    try {
+      token = req.headers.authorization.split(" ")[1];
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = await User.findById(decoded.id).select("-password");
+      next();
+    } catch (error) {
+      return res.status(401).send({ error: "Not authorized, token failed" });
+    }
   }
 
-  const newTask = new Task({
-    name: req.body.name,
-    dueDate: req.body.dueDate,
-    description: req.body.description,
-    status: req.body.status,
-    assignee: req.body.assignee,
+  if (!token) {
+    return res.status(401).send({ error: "Not authorized, no token" });
+  }
+};
+
+// Sign-up Route
+app.post("/signup", async (req, res) => {
+  const { name, email, password, role } = req.body;
+
+  // Check if the user already exists
+  const userExists = await User.findOne({ email });
+  if (userExists) {
+    return res.status(400).send({ error: "User already exists" });
+  }
+
+  // Create new user
+  const user = await User.create({
+    name,
+    email,
+    password,
+    role,
   });
+
+  if (user) {
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    return res.status(201).json({
+      token,
+      user: { name: user.name, email: user.email, role: user.role },
+    });
+  } else {
+    return res.status(400).send({ error: "Invalid user data" });
+  }
+});
+
+// Login Route
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (user && (await user.matchPassword(password))) {
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    return res.json({
+      token,
+      user: { name: user.name, email: user.email, role: user.role },
+    });
+  } else {
+    return res.status(401).send({ error: "Invalid email or password" });
+  }
+});
+
+// Protected Task Route
+app.post("/addtask", (req, res) => {
+  const { name, dueDate, description, status, assignee } = req.body;
+
+  const newTask = new Task({ name, dueDate, description, status, assignee });
 
   newTask.save((err, task) => {
     if (err) {
@@ -52,6 +130,27 @@ app.post("/addtask", (req, res) => {
     res.status(201).send(task);
   });
 });
+
+// app.post("/addtask", protect,(req, res) => {
+//   if (!req.body) {
+//     return res.status(400).send({ error: "Request body cannot be empty." });
+//   }
+
+//   const newTask = new Task({
+//     name: req.body.name,
+//     dueDate: req.body.dueDate,
+//     description: req.body.description,
+//     status: req.body.status,
+//     assignee: req.body.assignee,
+//   });
+
+//   newTask.save((err, task) => {
+//     if (err) {
+//       return res.status(500).send(err);
+//     }
+//     res.status(201).send(task);
+//   });
+// });
 
 app.get("/gettask", (req, res) => {
   Task.find({}, (err, result) => {
@@ -89,7 +188,7 @@ app.get("/gettask/:id", (req, res) => {
 // });
 
 // Route to edit a task
-app.put("/edittask/:id", (req, res) => {
+app.put("/edittask/:id",  (req, res) => {
   Task.findByIdAndUpdate(
     req.params.id,
     req.body,
@@ -107,7 +206,7 @@ app.put("/edittask/:id", (req, res) => {
 });
 
 // Route to delete a task
-app.delete("/deletetask/:id", (req, res) => {
+app.delete("/deletetask/:id",  (req, res) => {
   Task.findByIdAndDelete(req.params.id, (err, task) => {
     if (err) {
       return res.status(500).send(err);
@@ -119,6 +218,6 @@ app.delete("/deletetask/:id", (req, res) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+app.listen(PORT, HOST, () => {
+  console.log(`Server running on http://${HOST}:${PORT}`);
 });
