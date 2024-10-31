@@ -4,10 +4,13 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 require("dotenv").config();
 mongoose.set('strictQuery', true);
 
 const Task = require("./model");
+const User = require("./userModel");
 const User = require("./userModel");
 
 const app = express();
@@ -38,6 +41,7 @@ const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
   console.log("Connected to MongoDB");
+  console.log("Connected to MongoDB");
 });
 
 // Test route
@@ -45,6 +49,36 @@ app.get("/", (req, res) => {
   res.send("Hello World from Node.js & MongoDB!");
 });
 
+// JWT Middleware
+const protect = async (req, res, next) => {
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    try {
+      token = req.headers.authorization.split(" ")[1];
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = await User.findById(decoded.id).select("-password");
+      next();
+    } catch (error) {
+      return res.status(401).send({ error: "Not authorized, token failed" });
+    }
+  }
+
+  if (!token) {
+    return res.status(401).send({ error: "Not authorized, no token" });
+  }
+};
+
+// Sign-up Route
+app.post("/signup", async (req, res) => {
+  const { name, email, password, role } = req.body;
+
+  // Check if the user already exists
+  const userExists = await User.findOne({ email });
+  if (userExists) {
+    return res.status(400).send({ error: "User already exists" });
 // JWT Middleware
 const protect = async (req, res, next) => {
   let token;
@@ -130,6 +164,27 @@ app.post("/addtask", (req, res) => {
     res.status(201).send(task);
   });
 });
+
+// app.post("/addtask", protect,(req, res) => {
+//   if (!req.body) {
+//     return res.status(400).send({ error: "Request body cannot be empty." });
+//   }
+
+//   const newTask = new Task({
+//     name: req.body.name,
+//     dueDate: req.body.dueDate,
+//     description: req.body.description,
+//     status: req.body.status,
+//     assignee: req.body.assignee,
+//   });
+
+//   newTask.save((err, task) => {
+//     if (err) {
+//       return res.status(500).send(err);
+//     }
+//     res.status(201).send(task);
+//   });
+// });
 
 // app.post("/addtask", protect,(req, res) => {
 //   if (!req.body) {

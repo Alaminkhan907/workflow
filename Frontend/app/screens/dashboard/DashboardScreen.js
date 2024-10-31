@@ -8,8 +8,16 @@ import {
   ScrollView,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
 
 const DashboardScreen = ({ navigation }) => {
+  // const [projects, setProjects] = useState([]);
+
+  // useEffect(() => {
+  //   fetch("http://localhost:3000/gettask")
+  //     .then((res) => res.json())
+  //     .then((data) => setProjects(data));
+  // }, []);
   // const [projects, setProjects] = useState([]);
 
   // useEffect(() => {
@@ -47,6 +55,13 @@ const DashboardScreen = ({ navigation }) => {
   const sortedProjects = projects.sort(
     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
   );
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
   if (loading) {
     return (
       <View style={styles.container}>

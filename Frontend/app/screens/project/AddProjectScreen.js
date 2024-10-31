@@ -16,7 +16,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 const AddProjectScreen = ({ navigation }) => {
   
   const [taskName, setTaskName] = useState("");
-  const [dueDate, setDueDate] = useState(new Date());
+  const [dueDate, setDueDate] = useState(null);
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("pending");
   const [assignee, setAssignee] = useState("");
@@ -24,6 +24,21 @@ const AddProjectScreen = ({ navigation }) => {
 
 
   const handleSubmit = async () => {
+    if (!taskName.trim()) {
+      Alert.alert("Validation Error", "Please enter the task name.");
+      return;
+    }
+
+  
+    if (!assignee.trim()) {
+      Alert.alert("Validation Error", "Please enter the assignee.");
+      return;
+    }
+  
+    if (!dueDate) {
+      Alert.alert("Validation Error", "Please select a due date.");
+      return;
+    }
     const newTask = {
       name: taskName,
       dueDate: dueDate.toISOString().split("T")[0], 
@@ -83,7 +98,7 @@ const AddProjectScreen = ({ navigation }) => {
       <TouchableOpacity
         onPress={() => {
           console.log("Back button pressed");
-          navigation.replace("Project");
+          navigation.navigate("UserTabs", { screen: "Project" });
           // navigation.goBack();
         }}
         style={styles.backButton}
@@ -121,7 +136,7 @@ const AddProjectScreen = ({ navigation }) => {
 
       {showDatePicker && (
         <DateTimePicker
-          value={dueDate}
+          value={dueDate || new Date()}
           mode="date"
           display="default"
           onChange={handleDateChange}
