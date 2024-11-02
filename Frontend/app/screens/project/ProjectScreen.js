@@ -10,7 +10,6 @@ import {
   TextInput,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import { useFocusEffect } from "@react-navigation/native";
 
 const ProjectScreen = ({ navigation }) => {
   const [projects, setProjects] = useState([]);
@@ -38,14 +37,6 @@ const ProjectScreen = ({ navigation }) => {
   const handleClick = () => {
     navigation.replace("AddProjectScreen");
   };
-
-  if (loading) {
-    return (
-      <View style={styles.container}>
-        <Text>Loading...</Text>
-      </View>
-    );
-  }
 
   if (loading) {
     return (

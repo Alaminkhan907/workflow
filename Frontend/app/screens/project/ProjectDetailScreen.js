@@ -25,7 +25,6 @@ const ProjectDetailScreen = ({ route, navigation }) => {
 
       if (response.ok) {
         Alert.alert("Success", "Project deleted successfully.");
-        // onRefresh();
         navigation.goBack();
       } else {
         Alert.alert("Error", "Failed to delete the project. Please try again.");

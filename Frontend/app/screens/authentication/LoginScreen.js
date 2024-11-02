@@ -10,17 +10,13 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFocusEffect } from "@react-navigation/native";
 
 const LoginScreen = ({ navigation, onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
-  const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert("Error", "Please fill in both email and password");
       Alert.alert("Error", "Please fill in both email and password");
       return;
     }
@@ -106,17 +102,10 @@ const LoginScreen = ({ navigation, onLogin }) => {
       <TouchableOpacity onPress={() => navigation.replace("ForgotPassword")}>
         <Text style={styles.loginLinkText}>Forgot Password ?</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.replace("ForgotPassword")}>
-        <Text style={styles.loginLinkText}>Forgot Password ?</Text>
-      </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
       <Text>or</Text>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.replace("Signup")}
-      >
       <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.replace("Signup")}

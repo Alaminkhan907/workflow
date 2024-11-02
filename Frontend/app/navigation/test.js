@@ -128,4 +128,4 @@ const AppNavigator = () => {
   );
 };
 
-export default Test;
+export default AppNavigator;
