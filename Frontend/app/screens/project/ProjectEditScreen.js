@@ -24,7 +24,7 @@ const ProjectEditScreen = ({ route, navigation }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   useEffect(() => {
-    fetch(`${API_URL}/gettask/${projectId}`)
+    fetch(`${API_URL}/getProject/${projectId}`)
       .then((response) => response.json())
       .then((data) => {
         setTaskName(data.name);

@@ -7,8 +7,9 @@ const bcrypt = require("bcryptjs");
 require("dotenv").config();
 mongoose.set('strictQuery', true);
 
-const Task = require("./model");
+const Project = require("./projectModel");
 const User = require("./userModel");
+const Task = require("./taskModel");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -118,16 +119,16 @@ app.post("/login", async (req, res) => {
 });
 
 // Protected Task Route
-app.post("/addtask", (req, res) => {
+app.post("/addProject", (req, res) => {
   const { name, dueDate, description, status, assignee } = req.body;
 
-  const newTask = new Task({ name, dueDate, description, status, assignee });
+  const newProject = new Project({ name, dueDate, description, status, assignee });
 
-  newTask.save((err, task) => {
+  newProject.save((err, project) => {
     if (err) {
       return res.status(500).send(err);
     }
-    res.status(201).send(task);
+    res.status(201).send(project);
   });
 });
 
@@ -152,8 +153,8 @@ app.post("/addtask", (req, res) => {
 //   });
 // });
 
-app.get("/gettask", (req, res) => {
-  Task.find({}, (err, result) => {
+app.get("/getProject", (req, res) => {
+  Project.find({}, (err, result) => {
     if (err) {
       return res.status(500).send(err);
     }
@@ -162,15 +163,15 @@ app.get("/gettask", (req, res) => {
 });
 
 // Route to find task by ID
-app.get("/gettask/:id", (req, res) => {
-  Task.findById(req.params.id, (err, task) => {
+app.get("/getProject/:id", (req, res) => {
+  Project.findById(req.params.id, (err, project) => {
     if (err) {
       return res.status(500).send(err);
     }
-    if (!task) {
-      return res.status(404).send("Task not found");
+    if (!project) {
+      return res.status(404).send("Project not found");
     }
-    res.status(200).json(task);
+    res.status(200).json(Project);
   });
 });
 
@@ -188,33 +189,33 @@ app.get("/gettask/:id", (req, res) => {
 // });
 
 // Route to edit a task
-app.put("/edittask/:id",  (req, res) => {
-  Task.findByIdAndUpdate(
+app.put("/editProject/:id",  (req, res) => {
+  Project.findByIdAndUpdate(
     req.params.id,
     req.body,
     { new: true, runValidators: true },
-    (err, task) => {
+    (err, project) => {
       if (err) {
         return res.status(500).send(err);
       }
-      if (!task) {
-        return res.status(404).send("Task not found");
+      if (!project) {
+        return res.status(404).send("Project not found");
       }
-      res.status(200).json(task);
+      res.status(200).json(project);
     }
   );
 });
 
 // Route to delete a task
-app.delete("/deletetask/:id",  (req, res) => {
-  Task.findByIdAndDelete(req.params.id, (err, task) => {
+app.delete("/deleteProject/:id",  (req, res) => {
+  Project.findByIdAndDelete(req.params.id, (err, project) => {
     if (err) {
       return res.status(500).send(err);
     }
-    if (!task) {
-      return res.status(404).send("Task not found");
+    if (!project) {
+      return res.status(404).send("Project not found");
     }
-    res.status(200).send("Task deleted successfully");
+    res.status(200).send("Project deleted successfully");
   });
 });
 

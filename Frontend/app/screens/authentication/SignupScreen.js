@@ -10,6 +10,8 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 
+console.log("API_URL:", API_URL);
+
 const SignupScreen = ({ navigation }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");

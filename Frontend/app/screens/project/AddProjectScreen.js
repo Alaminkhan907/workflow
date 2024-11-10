@@ -51,7 +51,7 @@ const AddProjectScreen = ({ navigation }) => {
     console.log("Task Created: ", newTask);
 
     try {
-      const response = await fetch(`${API_URL}/addtask`, {
+      const response = await fetch(`${API_URL}/addProject`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

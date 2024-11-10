@@ -10,6 +10,7 @@ import {
   TextInput,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
+console.log("API_URL:", API_URL);
 
 const ProjectScreen = ({ navigation }) => {
   const [projects, setProjects] = useState([]);
@@ -18,7 +19,7 @@ const ProjectScreen = ({ navigation }) => {
   const fetchProjects = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_URL}/gettask`);
+      const response = await fetch(`${API_URL}/getProject`);
       const data = await response.json();
       setProjects(data);
       setLoading(false);

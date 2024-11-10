@@ -11,6 +11,8 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 
+console.log("API_URL:", API_URL);
+
 const LoginScreen = ({ navigation, onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
