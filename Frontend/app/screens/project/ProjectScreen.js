@@ -10,7 +10,6 @@ import {
   TextInput,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-console.log("API_URL:", API_URL);
 
 const ProjectScreen = ({ navigation }) => {
   const [projects, setProjects] = useState([]);
@@ -50,7 +49,6 @@ const ProjectScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>List of Projects</Text>
         <TouchableOpacity style={styles.newProjectButton}>
           <Text style={styles.newProjectText} onPress={handleClick}>
             New project →
@@ -100,11 +98,10 @@ const styles = StyleSheet.create({
   },
 
   newProjectText: {
-    backgroundColor: "#5A81F7",
+    backgroundColor: "#F0F0F0",
     paddingVertical: 10,
     paddingHorizontal: 30,
     borderRadius: 8,
-    color: "#fff",
     fontSize: 16,
   },
   projectCard: {

@@ -9,7 +9,7 @@ import {
 import { FontAwesome, Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 
-const TaskDetailScreen = ({ navigation }) => {
+const TaskAddScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       {/* Header with Edit and Delete icons */}
@@ -100,4 +100,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TaskDetailScreen;
+export default TaskAddScreen;

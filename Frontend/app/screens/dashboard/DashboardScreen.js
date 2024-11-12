@@ -80,6 +80,12 @@ const DashboardScreen = ({ navigation }) => {
 
         {/* Map over the sorted projects to display each one */}
         {sortedProjects.map((project) => (
+          <TouchableOpacity onPress={() => {
+            console.log("This is project:", JSON.stringify(project, null, 2));
+            //navigation.navigate("Task", {project})
+            navigation.navigate("Task", {data : project})
+          }
+          }>
           <View key={project._id} style={styles.taskItem}>
             <Text style={styles.taskTitle}>{project.name}</Text>
             <Text style={styles.taskDate}>
@@ -90,6 +96,7 @@ const DashboardScreen = ({ navigation }) => {
             </Text>
             <Text style={styles.taskStatus}>Status: {project.status}</Text>
           </View>
+          </TouchableOpacity>
         ))}
       </View>
     </ScrollView>

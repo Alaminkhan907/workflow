@@ -15,7 +15,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 
 const AddProjectScreen = ({ navigation }) => {
   
-  const [taskName, setTaskName] = useState("");
+  const [projectName, setProjectName] = useState("");
   const [dueDate, setDueDate] = useState(null);
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("pending");
@@ -24,8 +24,8 @@ const AddProjectScreen = ({ navigation }) => {
 
 
   const handleSubmit = async () => {
-    if (!taskName.trim()) {
-      Alert.alert("Validation Error", "Please enter the task name.");
+    if (!projectName.trim()) {
+      Alert.alert("Validation Error", "Please enter the project name.");
       return;
     }
 
@@ -39,8 +39,8 @@ const AddProjectScreen = ({ navigation }) => {
       Alert.alert("Validation Error", "Please select a due date.");
       return;
     }
-    const newTask = {
-      name: taskName,
+    const newProject = {
+      name: projectName,
       dueDate: dueDate.toISOString().split("T")[0], 
       description: description,
       status: status,
@@ -48,7 +48,7 @@ const AddProjectScreen = ({ navigation }) => {
       createdAt: new Date(),
     };
 
-    console.log("Task Created: ", newTask);
+    console.log("Project Created: ", newProject);
 
     try {
       const response = await fetch(`${API_URL}/addProject`, {
@@ -56,28 +56,28 @@ const AddProjectScreen = ({ navigation }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newTask), 
+        body: JSON.stringify(newProject), 
       });
 
       if (response.ok) {
         const data = await response.json();
         Alert.alert(
-          "Task Created",
-          `Task "${taskName}" has been created on the server.`
+          "Project Created",
+          `Project "${projectName}" has been created on the server.`
         );
         console.log("Response from server: ", data);
 
         navigation.replace("Project");
       } else {
         const errorData = await response.json();
-        console.error("Error creating task: ", errorData);
-        Alert.alert("Error", "Failed to create task on the server.");
+        console.error("Error creating project: ", errorData);
+        Alert.alert("Error", "Failed to create project on the server.");
       }
     } catch (error) {
       console.error("Network error: ", error);
       Alert.alert(
         "Error",
-        "An error occurred while sending the task to the server."
+        "An error occurred while sending the project to the server."
       );
     }
   };
@@ -106,13 +106,13 @@ const AddProjectScreen = ({ navigation }) => {
         <Ionicons name="arrow-back" size={24} color="black" />
       </TouchableOpacity>
 
-      {/* Task Input Fields */}
+      {/* Project Input Fields */}
       <Text style={styles.title}>Add New Project</Text>
       <TextInput
         style={styles.input}
-        placeholder="Task Name"
-        value={taskName}
-        onChangeText={setTaskName}
+        placeholder="Project Name"
+        value={projectName}
+        onChangeText={setProjectName}
       />
 
       <TextInput
@@ -158,7 +158,7 @@ const AddProjectScreen = ({ navigation }) => {
       </View>
 
       {/* Submit Button */}
-      <Button title="Create Task" onPress={handleSubmit} />
+      <Button title="Create Project" onPress={handleSubmit} />
     </View>
   );
 };

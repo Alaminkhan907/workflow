@@ -7,7 +7,7 @@ import DashboardScreen from "../screens/dashboard/DashboardScreen";
 import ProjectScreen from "../screens/project/ProjectScreen";
 import AboutScreen from "../screens/profile/AboutScreen";
 import NewProjectScreen from "../screens/task/TaskScreen";
-import TaskDetailScreen from "../screens/task/TaskDetailScreen";
+import TaskAddScreen from "../screens/task/TaskAddScreen";
 import AddProjectScreen from "../screens/project/AddProjectScreen";
 import ProjectDetailScreen from "../screens/project/ProjectDetailScreen";
 import ProjectEditScreen from "../screens/project/ProjectEditScreen";
@@ -49,7 +49,7 @@ const DashboardStack =()=>(
 const TaskStack =()=>(
   <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen name="Task" component={TaskScreen}/>
-    <Stack.Screen name="TaskDetailScreen" component={TaskDetailScreen}/>
+    <Stack.Screen name="TaskAddScreen" component={TaskAddScreen}/>
   </Stack.Navigator>
 )
 const AuthenticationStack =({ onLogin })=>(
