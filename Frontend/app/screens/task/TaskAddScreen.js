@@ -1,103 +1,242 @@
-import React from "react";
+import React, { useState } from "react";
+import { API_URL } from '@env';
 import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
   StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  TextInput,
+  Button,
+  Alert,
 } from "react-native";
-import { FontAwesome, Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { Picker } from "@react-native-picker/picker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const TaskAddScreen = ({ navigation }) => {
+  
+  const [taskName, setTaskName] = useState("");
+  const [dueDate, setDueDate] = useState(null);
+  const [description, setDescription] = useState("");
+  const [status, setStatus] = useState("pending");
+  const [assignee, setAssignee] = useState("");
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [urgent, setUrgent] = useState("");
+  const [project, setProject] = useState("");
+
+
+  const handleSubmit = async () => {
+    if (!taskName.trim()) {
+      Alert.alert("Validation Error", "Please enter the task name.");
+      return;
+    }
+
+  
+    if (!assignee.trim()) {
+      Alert.alert("Validation Error", "Please enter the assignee.");
+      return;
+    }
+  
+    if (!dueDate) {
+      Alert.alert("Validation Error", "Please select a due date.");
+      return;
+
+    }
+
+    if (!urgent) {
+      Alert.alert("Validation Error", "Please select if the task is urgent.");
+      return;
+    }
+
+    if (!project) {
+      Alert.alert("Validation Error", "Please select the project for task.");
+      return;
+    }
+    const newTask = {
+      name: taskName,
+      dueDate: dueDate.toISOString().split("T")[0], 
+      description: description,
+      status: status,
+      assignee: assignee,
+      createdAt: new Date(),
+      urgent: urgent,
+      project: project
+    };
+
+    console.log("Task Created: ", newTask);
+
+    try {
+      const response = await fetch(`${API_URL}/addTask`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newTask), 
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        Alert.alert(
+          "Task Created",
+          `Project "${taskName}" has been created on the server.`
+        );
+        console.log("Response from server: ", data);
+
+        navigation.replace("TaskScreen");
+      } else {
+        const errorData = await response.json();
+        console.error("Error creating task: ", errorData);
+        Alert.alert("Error", "Failed to create task on the server.");
+      }
+    } catch (error) {
+      console.error("Network error: ", error);
+      Alert.alert(
+        "Error",
+        "An error occurred while sending the task to the server."
+      );
+    }
+  };
+
+  const showDatePickerModal = () => {
+    setShowDatePicker(true);
+  };
+
+  const handleDateChange = (event, selectedDate) => {
+    setShowDatePicker(false); 
+    if (selectedDate) {
+      setDueDate(selectedDate); }
+  };
+
   return (
     <View style={styles.container}>
-      {/* Header with Edit and Delete icons */}
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => {
-            console.log("Back button pressed");
-            navigation.replace("Task");
-          }}
-        >
-          <Ionicons name="arrow-back" size={24} color="black" />
-        </TouchableOpacity>
-        <Text style={styles.projectTitle}>Add Task</Text>
-      </View>
+      {/* Back Button */}
+      <View style={styles.top}>
+      <TouchableOpacity
+        onPress={() => {
+          console.log("Back button pressed");
+          navigation.replace("TaskScreen");
+          // navigation.goBack();
+        }}
+        style={styles.backButton}
+      >
+        <Ionicons name="arrow-back" size={24} color="black" />
+      </TouchableOpacity>
 
-      {/* Description input */}
+      {/* Project Input Fields */}
+      <Text style={styles.title}>Add New Task</Text>
+      </View>
       <TextInput
-        style={styles.descriptionInput}
-        placeholder="Description (optional)"
-        placeholderTextColor="#B0B0B0"
+        style={styles.input}
+        placeholder="Task Name"
+        value={taskName}
+        onChangeText={setTaskName}
       />
 
-      {/* Add assignee text */}
-      <Text style={styles.addAssigneeText}>Add Assignee</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Description"
+        value={description}
+        onChangeText={setDescription}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Assignee"
+        value={assignee}
+        onChangeText={setAssignee}
+      />
 
-      {/* Done button with more options */}
-      <View style={styles.bottomRow}>
-        <TouchableOpacity>
-          <Entypo name="dots-three-horizontal" size={24} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.doneButton}>
-          <Text style={styles.doneButtonText}>Done</Text>
-        </TouchableOpacity>
+      <TouchableOpacity onPress={showDatePickerModal} style={styles.input}>
+        <Text>
+          {dueDate ? dueDate.toISOString().split("T")[0] : "Select Due Date"}
+        </Text>
+      </TouchableOpacity>
+
+      {showDatePicker && (
+        <DateTimePicker
+          value={dueDate || new Date()}
+          mode="date"
+          display="default"
+          onChange={handleDateChange}
+        />
+      )}
+
+      {/* Status Dropdown */}
+      <View style={styles.pickerContainer}>
+        <Text style={styles.label}>Status:</Text>
+        <Picker
+          selectedValue={status}
+          style={styles.picker}
+          onValueChange={(itemValue) => setStatus(itemValue)}
+        >
+          <Picker.Item label="Pending" value="pending" />
+          <Picker.Item label="In Progress" value="in_progress" />
+          <Picker.Item label="Completed" value="completed" />
+        </Picker>
       </View>
+
+      <View style={styles.pickerContainer}>
+        <Text style={styles.label}>Urgent:</Text>
+        <Picker
+          selectedValue={status}
+          style={styles.picker}
+          onValueChange={(itemValue) => setStatus(itemValue)}
+        >
+          <Picker.Item label="Yes" value="true" />
+          <Picker.Item label="No" value="false" />
+        </Picker>
+      </View>
+
+      
+
+      {/* Submit Button */}
+      <Button title="Create Task" onPress={handleSubmit} />
     </View>
   );
 };
 
+export default TaskAddScreen;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F9F9F9",
     padding: 20,
-    marginTop: 60,
+    backgroundColor: "#f5f5f5",
   },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+  top: {
+    display: 'flex',
+    flexDirection: 'row',
+    marginBottom: 20,
   },
-  date: {
-    fontSize: 16,
-    fontWeight: "500",
+  backButton: {
+    alignSelf: "flex-start",
+   
   },
-  icons: {
-    flexDirection: "row",
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+    left: 15,
+
   },
-  icon: {
-    marginLeft: 15,
-  },
-  descriptionInput: {
-    backgroundColor: "#F0F0F0",
-    height: 40,
-    marginTop: 10,
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 10,
+    marginVertical: 10,
     borderRadius: 5,
-    paddingHorizontal: 10,
+    backgroundColor: "#fff",
+  },
+  pickerContainer: {
+    marginVertical: 10,
+  },
+  label: {
     fontSize: 16,
+    marginBottom: 5,
   },
-  addAssigneeText: {
-    marginTop: 15,
-    fontSize: 16,
-  },
-  bottomRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 20,
-  },
-  doneButton: {
-    backgroundColor: "#000",
-    borderRadius: 5,
-    paddingVertical: 5,
-    paddingHorizontal: 20,
-  },
-  doneButtonText: {
-    color: "#FFF",
-    fontSize: 16,
+  picker: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 10,
+    backgroundColor: "#fff",
   },
 });
-
-export default TaskAddScreen;

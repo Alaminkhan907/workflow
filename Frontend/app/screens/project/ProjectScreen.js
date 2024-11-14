@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect, useCallback } from "react";
-import { API_URL } from '@env';
+import { API_URL } from "@env";
 import {
   View,
   Text,
@@ -10,6 +11,7 @@ import {
   TextInput,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
+
 
 const ProjectScreen = ({ navigation }) => {
   const [projects, setProjects] = useState([]);
@@ -35,7 +37,7 @@ const ProjectScreen = ({ navigation }) => {
   );
 
   const handleClick = () => {
-    navigation.replace("AddProjectScreen");
+    navigation.navigate('AddProjectScreen');
   };
 
   if (loading) {

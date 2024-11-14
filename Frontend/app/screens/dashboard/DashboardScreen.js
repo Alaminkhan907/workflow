@@ -83,7 +83,9 @@ const DashboardScreen = ({ navigation }) => {
           <TouchableOpacity onPress={() => {
             console.log("This is project:", JSON.stringify(project, null, 2));
             //navigation.navigate("Task", {project})
-            navigation.navigate("Task", {data : project})
+            navigation.navigate("Tasks", {
+              screen: "TaskScreen",
+            });
           }
           }>
           <View key={project._id} style={styles.taskItem}>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 import { API_URL } from "@env";
 import {
   View,
@@ -10,7 +10,7 @@ import {
   TextInput,
 } from "react-native";
 import { Table, Row, Rows } from 'react-native-table-component';
-import { useState, useEffect } from 'react';
+import { useFocusEffect } from "@react-navigation/native";
 
 const TaskScreen = ({ route }) => {
   console.log("This should be route.params.project" + route.params);
@@ -19,20 +19,22 @@ const TaskScreen = ({ route }) => {
   const [tasks, setTasks] = useState([]);
   console.log("Passing parameter " + project._id);
 
-  useEffect(() => {
-    // Fetch tasks for the project
-    const fetchTasks = async () => {
-      try {
-        const response = await fetch(`${API_URL}/getTasksByProject/${project._id}`); 
-        const data = await response.json();
-        setTasks(data);
-      } catch (error) {
-        console.error("Failed to fetch tasks:", error);
-      }
-    };
 
-    fetchTasks();
-  }, [project._id]);
+  const fetchTasks = async () => {
+    try {
+      const response = await fetch(`${API_URL}/getTasksByProject/${project._id}`); 
+      const data = await response.json();
+      setTasks(data);
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchTasks();
+    }, [])
+  );
 
   // Map the fetched tasks to the table data format
   const tableData = tasks.map(task => [
@@ -42,17 +44,23 @@ const TaskScreen = ({ route }) => {
   ]);
 
   const handleClick = () => {
-    navigation.replace("TaskAddScreen");
+    navigation.navigate('TaskAddScreen');
   };
+
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>{project.name}
-      <TouchableOpacity style={styles.newProjectButton}>
-          <Text style={styles.newProjectText} onPress={handleClick}>
+      
+        <TouchableOpacity
+          >
+            <View style={styles.newProjectButton}>
+            <Text style={styles.newProjectText} onPress={handleClick}>
             New task →
           </Text>
-        </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+
       </Text>
       <Table borderStyle={{ borderWidth: 1, borderColor: '#000000' }}>
         <Row data={tableHead} style={styles.head} textStyle={styles.text} />
@@ -61,6 +69,8 @@ const TaskScreen = ({ route }) => {
     </View>
   );
 };
+
+export default TaskScreen;
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
@@ -80,4 +90,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TaskScreen;
+

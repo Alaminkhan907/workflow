@@ -67,7 +67,7 @@ const AddProjectScreen = ({ navigation }) => {
         );
         console.log("Response from server: ", data);
 
-        navigation.replace("Project");
+        navigation.replace("ProjectScreen");
       } else {
         const errorData = await response.json();
         console.error("Error creating project: ", errorData);
@@ -98,7 +98,7 @@ const AddProjectScreen = ({ navigation }) => {
       <TouchableOpacity
         onPress={() => {
           console.log("Back button pressed");
-          navigation.replace("Project");
+          navigation.replace("ProjectScreen");
           // navigation.goBack();
         }}
         style={styles.backButton}

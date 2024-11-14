@@ -60,7 +60,7 @@ const ProjectEditScreen = ({ route, navigation }) => {
 
       if (response.ok) {
         Alert.alert("Success", `Task "${taskName}" has been updated.`);
-        navigation.replace("NewProject");
+        navigation.replace("AddProjectScreen");
       } else {
         Alert.alert("Error", "Failed to update task on the server.");
       }
