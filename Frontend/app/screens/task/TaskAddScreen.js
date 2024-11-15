@@ -13,7 +13,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
-const TaskAddScreen = ({ navigation }) => {
+const TaskAddScreen = ({ navigation, route }) => {
+  const {project} = route.params;
+  console.log("Project unpacked ", project);
   
   const [taskName, setTaskName] = useState("");
   const [dueDate, setDueDate] = useState(null);
@@ -21,11 +23,11 @@ const TaskAddScreen = ({ navigation }) => {
   const [status, setStatus] = useState("pending");
   const [assignee, setAssignee] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [urgent, setUrgent] = useState("");
-  const [project, setProject] = useState("");
+  const [urgent, setUrgent] = useState("false");
 
 
   const handleSubmit = async () => {
+    console.log("Submit task button clicked");
     if (!taskName.trim()) {
       Alert.alert("Validation Error", "Please enter the task name.");
       return;
@@ -37,36 +39,36 @@ const TaskAddScreen = ({ navigation }) => {
       return;
     }
   
-    if (!dueDate) {
-      Alert.alert("Validation Error", "Please select a due date.");
-      return;
+    // if (!dueDate) {
+    //   Alert.alert("Validation Error", "Please select a due date.");
+    //   return;
 
-    }
+    // }
 
     if (!urgent) {
       Alert.alert("Validation Error", "Please select if the task is urgent.");
+      console.log("Urgency not selected");
       return;
+      
     }
 
-    if (!project) {
-      Alert.alert("Validation Error", "Please select the project for task.");
-      return;
-    }
+
     const newTask = {
       name: taskName,
-      dueDate: dueDate.toISOString().split("T")[0], 
+      //dueDate: dueDate.toISOString().split("T")[0], 
+      dueDate: "2024-11-10T00:00:00Z",
       description: description,
       status: status,
       assignee: assignee,
       createdAt: new Date(),
       urgent: urgent,
-      project: project
+      project: project._id
     };
 
     console.log("Task Created: ", newTask);
 
     try {
-      const response = await fetch(`${API_URL}/addTask`, {
+      const response = await fetch(`${API_URL}/addTask/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -78,11 +80,11 @@ const TaskAddScreen = ({ navigation }) => {
         const data = await response.json();
         Alert.alert(
           "Task Created",
-          `Project "${taskName}" has been created on the server.`
+          `Task "${taskName}" has been created on the server.`
         );
         console.log("Response from server: ", data);
 
-        navigation.replace("TaskScreen");
+        navigation.replace("TaskScreen", {project})
       } else {
         const errorData = await response.json();
         console.error("Error creating task: ", errorData);
@@ -122,7 +124,7 @@ const TaskAddScreen = ({ navigation }) => {
         <Ionicons name="arrow-back" size={24} color="black" />
       </TouchableOpacity>
 
-      {/* Project Input Fields */}
+      {/* Task Input Fields */}
       <Text style={styles.title}>Add New Task</Text>
       </View>
       <TextInput
@@ -177,12 +179,13 @@ const TaskAddScreen = ({ navigation }) => {
       <View style={styles.pickerContainer}>
         <Text style={styles.label}>Urgent:</Text>
         <Picker
-          selectedValue={status}
+          selectedValue={urgent}
           style={styles.picker}
-          onValueChange={(itemValue) => setStatus(itemValue)}
+          onValueChange={(itemValue) => setUrgent(itemValue)}
         >
-          <Picker.Item label="Yes" value="true" />
           <Picker.Item label="No" value="false" />
+          <Picker.Item label="Yes" value="true" />
+          
         </Picker>
       </View>
 

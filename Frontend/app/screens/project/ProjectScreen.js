@@ -11,6 +11,7 @@ import {
   TextInput,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 
 const ProjectScreen = ({ navigation }) => {
@@ -37,7 +38,7 @@ const ProjectScreen = ({ navigation }) => {
   );
 
   const handleClick = () => {
-    navigation.navigate('AddProjectScreen');
+    navigation.navigate("AddProjectScreen");
   };
 
   if (loading) {
@@ -72,6 +73,13 @@ const ProjectScreen = ({ navigation }) => {
               <Text style={styles.projectTitle}>{item.name}</Text>
               <Text style={styles.projectDescription}>{item.description}</Text>
               <Text style={styles.teamContainer}>{item.assignee}</Text>
+              <View style={styles.iconContainer}>
+            <MaterialCommunityIcons
+              name="circle-edit-outline"
+              size={24}
+              color="black"
+            />
+          </View>
             </View>
           </TouchableOpacity>
         )}
@@ -124,4 +132,7 @@ const styles = StyleSheet.create({
   teamContainer: {
     flexDirection: "row",
   },
+  iconContainer: {
+    flexDirection: "column",
+  }
 });

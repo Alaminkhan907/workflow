@@ -18,6 +18,8 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import TaskDetailScreen from "../screens/task/TaskDetailScreen";
+import TaskEditScreen from "../screens/task/TaskEditScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -48,8 +50,11 @@ const TaskStack =()=>(
   <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen name="TaskScreen" component={TaskScreen}/>
     <Stack.Screen name="TaskAddScreen" component={TaskAddScreen}/>
+    <Stack.Screen name="TaskEditScreen" component={TaskEditScreen}/>
+    <Stack.Screen name="TaskDetailScreen" component={TaskDetailScreen}/>
   </Stack.Navigator>
 )
+
 const AuthenticationStack =({ onLogin })=>(
   <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen name="Login">

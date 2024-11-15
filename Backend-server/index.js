@@ -192,8 +192,8 @@ Ideally the projects API endpoints would also both projects and tasks and then d
 // Protected task Route
 app.post("/addTask", (req, res) => {
   const { name, dueDate, description, status, assignee, urgent, project } = req.body;
-
-  const newTask = new Task({ name, dueDate, description, status, assignee, urgent, project});
+  var project_id = mongoose.Types.ObjectId(project);
+  const newTask = new Task({ name, dueDate, description, status, assignee, urgent, project_id});
 
   newTask.save((err, task) => {
     if (err) {

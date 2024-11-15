@@ -8,13 +8,17 @@ import {
   TouchableOpacity,
   Button,
   TextInput,
+  Icon,
 } from "react-native";
 import { Table, Row, Rows } from 'react-native-table-component';
 import { useFocusEffect } from "@react-navigation/native";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
-const TaskScreen = ({ route }) => {
-  console.log("This should be route.params.project" + route.params);
-  const project = {"_id": "673211b4376082018f99cfa2", "name": "Test project"};
+const TaskScreen = ({ route, navigation }) => {
+  console.log("This should be route.params " + JSON.stringify(route.params?.project, null, 2));
+  //const project = {"_id": "673211b4376082018f99cfa2", "name": "Test project"};
+  const {project} = route.params;
+  console.log("Project unpacked ", project);
   const tableHead = ['Task', 'Deadline', 'Progress'];
   const [tasks, setTasks] = useState([]);
   console.log("Passing parameter " + project._id);
@@ -36,16 +40,54 @@ const TaskScreen = ({ route }) => {
     }, [])
   );
 
-  // Map the fetched tasks to the table data format
-  const tableData = tasks.map(task => [
-    task.name,
-    new Date(task.dueDate).toLocaleDateString(), // Format date as needed
-    task.status,
-  ]);
 
   const handleClick = () => {
-    navigation.navigate('TaskAddScreen');
+    navigation.navigate("TaskAddScreen", {project});
   };
+
+
+  const handleEditClick = (task) => {
+    console.log(console.log("handleEditClick is sending  " + JSON.stringify(route.params, null, 2)));
+    navigation.navigate("TaskDetailScreen", {task});
+  };
+
+  // Map the fetched tasks to the table data format
+  const tableData = tasks.map(task =>
+    task.urgent
+      ? [
+          [task.name,
+          <View style={styles.urgentIcon}>
+            <MaterialCommunityIcons
+              name="alert-circle-outline"
+              size={24}
+              color="black"
+            />
+          </View>],
+          new Date(task.dueDate).toLocaleDateString(), // Format date as needed
+          [task.status, <div style={styles.editIcon} >
+            <MaterialCommunityIcons onPress={() => handleEditClick(task)}
+              name="circle-edit-outline"
+              size={24}
+              color="black"
+            />
+          </div>]
+      
+        ]
+      : [
+          task.name,
+          new Date(task.dueDate).toLocaleDateString(),
+          [task.status, <div style={styles.editIcon} >
+            <MaterialCommunityIcons onPress={() => handleEditClick(task)}
+              name="circle-edit-outline"
+              size={24}
+              color="black"
+            />
+          </div>]
+      
+        ]
+  );
+
+
 
 
   return (
@@ -88,6 +130,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     fontSize: 16,
   },
+  urgentIcon:{
+    float: "right",
+  },
+
+  editIcon:{
+    float: "right",
+  }
 });
 
 

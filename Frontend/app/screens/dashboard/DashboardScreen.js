@@ -10,7 +10,7 @@ import {
 import { useFocusEffect } from "@react-navigation/native";
 console.log("API_URL:", API_URL);
 
-const DashboardScreen = ({ navigation }) => {
+const DashboardScreen = ({ navigation, route }) => {
   // const [projects, setProjects] = useState([]);
 
   // useEffect(() => {
@@ -85,7 +85,9 @@ const DashboardScreen = ({ navigation }) => {
             //navigation.navigate("Task", {project})
             navigation.navigate("Tasks", {
               screen: "TaskScreen",
-            });
+              params: { project: project },
+            },
+            );
           }
           }>
           <View key={project._id} style={styles.taskItem}>
