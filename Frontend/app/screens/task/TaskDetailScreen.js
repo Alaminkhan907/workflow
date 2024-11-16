@@ -12,6 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 const TaskDetailScreen = ({ route, navigation }) => {
   const {task} = route.params;
+  const [loading, setLoading] = useState(true);
 
   const handleEdit = () => {
     navigation.navigate("TaskEditScreen", { projectId: task._id });
@@ -19,9 +20,11 @@ const TaskDetailScreen = ({ route, navigation }) => {
 
   const handleDelete = async () => {
     try {
+      setLoading(true);
       const response = await fetch(`${API_URL}/deletetask/${task._id}`, {
         method: "DELETE",
       });
+      setLoading(false);
 
       if (response.ok) {
         Alert.alert("Success", "Task deleted successfully.");
@@ -31,6 +34,7 @@ const TaskDetailScreen = ({ route, navigation }) => {
       }
     } catch (error) {
       Alert.alert("Error", "An error occurred while deleting the task.");
+      setLoading(false);
     }
   };
 

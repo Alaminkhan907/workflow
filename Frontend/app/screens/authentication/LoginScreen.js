@@ -14,6 +14,7 @@ import { useFocusEffect } from "@react-navigation/native";
 const LoginScreen = ({ navigation, onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -24,6 +25,7 @@ const LoginScreen = ({ navigation, onLogin }) => {
     const loginData = { email, password };
 
     try {
+      setLoading(true);
       const response = await fetch(`${API_URL}/login`, {
         method: "POST",
         headers: {
@@ -31,6 +33,7 @@ const LoginScreen = ({ navigation, onLogin }) => {
         },
         body: JSON.stringify(loginData),
       });
+      setLoading(false);
 
       const data = await response.json();
 
@@ -55,6 +58,7 @@ const LoginScreen = ({ navigation, onLogin }) => {
     } catch (error) {
       console.error("Network error:", error);
       Alert.alert("Error", "Failed to connect to the server");
+      setLoading(false);
     }
   };
 

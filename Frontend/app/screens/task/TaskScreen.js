@@ -22,15 +22,18 @@ const TaskScreen = ({ route, navigation }) => {
   const tableHead = ['Task', 'Deadline', 'Progress'];
   const [tasks, setTasks] = useState([]);
   console.log("Passing parameter " + project._id);
-
+  const [loading, setLoading] = useState(true);
 
   const fetchTasks = async () => {
     try {
+      setLoading(true);
       const response = await fetch(`${API_URL}/getTasksByProject/${project._id}`); 
       const data = await response.json();
       setTasks(data);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching projects:", error);
+      setLoading(false);
     }
   };
 
