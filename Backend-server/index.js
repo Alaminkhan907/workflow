@@ -30,10 +30,11 @@ app.use(express.json());
 //   useUnifiedTopology: true,
 // });
 
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+if (process.env.NODE_ENV !== "test") {
+  mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
@@ -279,3 +280,6 @@ app.delete("/deleteTask/:id",  (req, res) => {
 app.listen(PORT, HOST, () => {
   console.log(`Server running on http://${HOST}:${PORT}`);
 });
+}
+
+module.exports = app;
