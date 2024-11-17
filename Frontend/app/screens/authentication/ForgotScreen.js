@@ -11,7 +11,6 @@ import {
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(true);
 
   const handleForgotPassword = async () => {
     if (!email) {
@@ -20,7 +19,6 @@ const ForgotPasswordScreen = ({ navigation }) => {
     }
 
     try {
-      setLoading(true);
       const response = await fetch(`${API_URL}/forgot-password`, {
         method: "POST",
         headers: {
@@ -28,7 +26,6 @@ const ForgotPasswordScreen = ({ navigation }) => {
         },
         body: JSON.stringify({ email }),
       });
-      setLoading(false);
 
       if (response.ok) {
         Alert.alert(
@@ -47,7 +44,6 @@ const ForgotPasswordScreen = ({ navigation }) => {
         "Error",
         "An error occurred while trying to send the password reset email."
       );
-      setLoading(false);
     }
   };
 

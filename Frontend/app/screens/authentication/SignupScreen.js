@@ -17,7 +17,6 @@ const SignupScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
-  const [loading, setLoading] = useState(true);
 
   const handleSignup = async () => {
     if (!name || !email || !password || !role) {
@@ -32,7 +31,6 @@ const SignupScreen = ({ navigation }) => {
     };
 
     try {
-      setLoading(true);
       const response = await fetch(`${API_URL}/signup`, {
         method: "POST",
         headers: {
@@ -40,7 +38,6 @@ const SignupScreen = ({ navigation }) => {
         },
         body: JSON.stringify(signupData),
       });
-      setLoading(false)
 
       if (response.ok) {
         const data = await response.json();
@@ -53,7 +50,6 @@ const SignupScreen = ({ navigation }) => {
     } catch (error) {
       console.error("Network error:", error);
       Alert.alert("Error", "Failed to connect to the server.");
-      setLoading(false);
     }
   };
 

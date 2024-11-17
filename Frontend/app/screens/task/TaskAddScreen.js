@@ -24,7 +24,7 @@ const TaskAddScreen = ({ navigation, route }) => {
   const [assignee, setAssignee] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [urgent, setUrgent] = useState("false");
-  const [loading, setLoading] = useState(true);
+
 
   const handleSubmit = async () => {
     console.log("Submit task button clicked");
@@ -68,7 +68,6 @@ const TaskAddScreen = ({ navigation, route }) => {
     console.log("Task Created: ", newTask);
 
     try {
-      setLoading(true);
       const response = await fetch(`${API_URL}/addTask/`, {
         method: "POST",
         headers: {
@@ -76,7 +75,6 @@ const TaskAddScreen = ({ navigation, route }) => {
         },
         body: JSON.stringify(newTask), 
       });
-      setLoading(false);
 
       if (response.ok) {
         const data = await response.json();
@@ -98,7 +96,6 @@ const TaskAddScreen = ({ navigation, route }) => {
         "Error",
         "An error occurred while sending the task to the server."
       );
-      setLoading(false);
     }
   };
 

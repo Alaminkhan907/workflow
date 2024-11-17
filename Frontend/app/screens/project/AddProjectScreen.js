@@ -21,7 +21,6 @@ const AddProjectScreen = ({ navigation }) => {
   const [status, setStatus] = useState("pending");
   const [assignee, setAssignee] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [loading, setLoading] = useState(true);
 
 
   const handleSubmit = async () => {
@@ -52,7 +51,6 @@ const AddProjectScreen = ({ navigation }) => {
     console.log("Project Created: ", newProject);
 
     try {
-      setLoading(true);
       const response = await fetch(`${API_URL}/addProject`, {
         method: "POST",
         headers: {
@@ -60,7 +58,6 @@ const AddProjectScreen = ({ navigation }) => {
         },
         body: JSON.stringify(newProject), 
       });
-      setLoading(false);
 
       if (response.ok) {
         const data = await response.json();
@@ -82,7 +79,6 @@ const AddProjectScreen = ({ navigation }) => {
         "Error",
         "An error occurred while sending the project to the server."
       );
-      setLoading(false);
     }
   };
 
