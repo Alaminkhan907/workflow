@@ -33,6 +33,7 @@ test_frontend:
     - echo "Running frontend tests..."
     - cd ./Frontend
     - npm install --legacy-peer-deps
+    - npm audit fix --force
     - npm install --save-dev jest @testing-library/react-native react-test-renderer # should install test
     - npm test
   only:
