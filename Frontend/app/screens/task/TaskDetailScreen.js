@@ -12,6 +12,8 @@ import { Ionicons } from "@expo/vector-icons";
 
 const TaskDetailScreen = ({ route, navigation }) => {
   const {task} = route.params;
+  const project = {};
+  console.log("Taskdetailscreen project " + task.project)
 
   const handleEdit = () => {
     navigation.navigate("TaskEditScreen", { projectId: task._id });
@@ -34,10 +36,13 @@ const TaskDetailScreen = ({ route, navigation }) => {
     }
   };
 
+
+
   return (
+    
     <ScrollView contentContainerStyle={styles.container}>
       <TouchableOpacity
-        onPress={() => navigation.replace("TaskScreen", {project : task.project})}
+        onPress={() => navigation.goBack()}
         style={styles.backButton}
       >
         <Ionicons name="arrow-back" size={24} color="black" />

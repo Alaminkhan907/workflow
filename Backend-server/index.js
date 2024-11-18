@@ -151,7 +151,7 @@ app.get("/getProject/:id", (req, res) => {
     if (!project) {
       return res.status(404).send("Project not found");
     }
-    res.status(200).json(Project);
+    res.status(200).json(project);
   });
 });
 
@@ -215,14 +215,16 @@ app.get("/getTask", (req, res) => {
 
 // Route to find task by ID
 app.get("/getTask/:id", (req, res) => {
+  console.log("Task Id received " + req.params.id)
   Task.findById(req.params.id, (err, task) => {
     if (err) {
       return res.status(500).send(err);
     }
     if (!task) {
-      return res.status(404).send("Project not found");
+      return res.status(404).send("Task not found");
     }
-    res.status(200).json(Task);
+    console.log("Sending task by id back to server " + task);
+    res.status(200).json(task);
   });
 });
 
