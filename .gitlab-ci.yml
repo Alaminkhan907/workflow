@@ -32,6 +32,7 @@ test_frontend:
   script:
     - echo "Running frontend tests..."
     - cd ./Frontend
+    - rm -rf node_modules package-lock.json
     - npm install --legacy-peer-deps
     - npm audit fix --force
     - npm install --save-dev jest @testing-library/react-native react-test-renderer # should install test
