@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect, useCallback } from "react";
-import { API_URL } from '@env';
+import { API_URL } from "@env";
 import {
   View,
   Text,
@@ -10,6 +11,8 @@ import {
   TextInput,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+
 
 const ProjectScreen = ({ navigation }) => {
   const [projects, setProjects] = useState([]);
@@ -18,7 +21,7 @@ const ProjectScreen = ({ navigation }) => {
   const fetchProjects = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_URL}/gettask`);
+      const response = await fetch(`${API_URL}/getProject`);
       const data = await response.json();
       setProjects(data);
       setLoading(false);
@@ -35,7 +38,7 @@ const ProjectScreen = ({ navigation }) => {
   );
 
   const handleClick = () => {
-    navigation.replace("AddProjectScreen");
+    navigation.navigate("AddProjectScreen");
   };
 
   if (loading) {
@@ -49,7 +52,6 @@ const ProjectScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>List of Projects</Text>
         <TouchableOpacity style={styles.newProjectButton}>
           <Text style={styles.newProjectText} onPress={handleClick}>
             New project →
@@ -71,6 +73,13 @@ const ProjectScreen = ({ navigation }) => {
               <Text style={styles.projectTitle}>{item.name}</Text>
               <Text style={styles.projectDescription}>{item.description}</Text>
               <Text style={styles.teamContainer}>{item.assignee}</Text>
+              <View style={styles.iconContainer}>
+            <MaterialCommunityIcons
+              name="circle-edit-outline"
+              size={24}
+              color="black"
+            />
+          </View>
             </View>
           </TouchableOpacity>
         )}
@@ -99,11 +108,10 @@ const styles = StyleSheet.create({
   },
 
   newProjectText: {
-    backgroundColor: "#5A81F7",
+    backgroundColor: "#F0F0F0",
     paddingVertical: 10,
     paddingHorizontal: 30,
     borderRadius: 8,
-    color: "#fff",
     fontSize: 16,
   },
   projectCard: {
@@ -124,4 +132,7 @@ const styles = StyleSheet.create({
   teamContainer: {
     flexDirection: "row",
   },
+  iconContainer: {
+    flexDirection: "column",
+  }
 });

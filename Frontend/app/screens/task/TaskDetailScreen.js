@@ -1,102 +1,186 @@
 import React from "react";
+import { API_URL } from "@env";
 import {
   View,
   Text,
-  TextInput,
-  TouchableOpacity,
+  Alert,
   StyleSheet,
+  TouchableOpacity,
+  ScrollView,
 } from "react-native";
-import { FontAwesome, Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 
-const TaskDetailScreen = ({ navigation }) => {
+const TaskDetailScreen = ({ route, navigation }) => {
+  const {task} = route.params;
+  const project = {};
+  console.log("Taskdetailscreen project " + task.project)
+
+  const handleEdit = () => {
+    navigation.navigate("TaskEditScreen", { projectId: task._id });
+  };
+
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(`${API_URL}/deletetask/${task._id}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        Alert.alert("Success", "Task deleted successfully.");
+        navigation.goBack();
+      } else {
+        Alert.alert("Error", "Failed to delete the task. Please try again.");
+      }
+    } catch (error) {
+      Alert.alert("Error", "An error occurred while deleting the task.");
+    }
+  };
+
+
+
   return (
-    <View style={styles.container}>
-      {/* Header with Edit and Delete icons */}
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => {
-            console.log("Back button pressed");
-            navigation.replace("Task");
-          }}
-        >
-          <Ionicons name="arrow-back" size={24} color="black" />
-        </TouchableOpacity>
-        <Text style={styles.projectTitle}>Add Task</Text>
+    
+    <ScrollView contentContainerStyle={styles.container}>
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={styles.backButton}
+      >
+        <Ionicons name="arrow-back" size={24} color="black" />
+      </TouchableOpacity>
+
+      <Text style={styles.title}>{task.name}</Text>
+
+      <View style={styles.card}>
+        <Text style={styles.sectionTitle}>Description</Text>
+        <Text style={styles.description}>{task.description || "No description available."}</Text>
       </View>
 
-      {/* Description input */}
-      <TextInput
-        style={styles.descriptionInput}
-        placeholder="Description (optional)"
-        placeholderTextColor="#B0B0B0"
-      />
+      <View style={styles.card}>
+        <Text style={styles.sectionTitle}>Details</Text>
+        {task.details ? (
+          <Text style={styles.details}>{task.details}</Text>
+        ) : (
+          <Text style={styles.details}>No additional details provided.</Text>
+        )}
+        <Text style={styles.status}>
+          <Ionicons name="checkmark-circle-outline" size={18} color="#4CAF50" />{" "}
+          {task.status || "Status not available"}
+        </Text>
+      </View>
 
-      {/* Add assignee text */}
-      <Text style={styles.addAssigneeText}>Add Assignee</Text>
+      <View style={styles.card}>
+        <Text style={styles.sectionTitle}>Timeline</Text>
+        <Text style={styles.details}>
+          <Ionicons name="calendar-outline" size={16} color="#3B82F6" /> Due Date:{" "}
+          {task.dueDate || "Not specified"}
+        </Text>
+        <Text style={styles.details}>
+          <Ionicons name="time-outline" size={16} color="#3B82F6" /> Created At:{" "}
+          {task.createdAt || "Not specified"}
+        </Text>
+      </View>
 
-      {/* Done button with more options */}
-      <View style={styles.bottomRow}>
-        <TouchableOpacity>
-          <Entypo name="dots-three-horizontal" size={24} color="black" />
+      <View style={styles.card}>
+        <Text style={styles.sectionTitle}>Assigned To</Text>
+        <Text style={styles.details}>
+          <Ionicons name="person-outline" size={16} color="#3B82F6" />{" "}
+          {task.assignee || "No assignee specified"}
+        </Text>
+      </View>
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.editButton} onPress={handleEdit}>
+          <Ionicons name="create-outline" size={18} color="white" />
+          <Text style={styles.buttonText}>Edit</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.doneButton}>
-          <Text style={styles.doneButtonText}>Done</Text>
+        <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
+          <Ionicons name="trash-outline" size={18} color="white" />
+          <Text style={styles.buttonText}>Delete</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: "#F9F9F9",
-    padding: 20,
-    marginTop: 60,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 30,
   },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+  backButton: {
+    position: "absolute",
+    top: 20,
+    left: 20,
   },
-  date: {
+  title: {
+    fontSize: 26,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginVertical: 20,
+    color: "#333",
+  },
+  card: {
+    backgroundColor: "#FFFFFF",
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 15,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    marginBottom: 8,
+    color: "#555",
+  },
+  description: {
     fontSize: 16,
+    color: "#666",
+    lineHeight: 22,
+  },
+  details: {
+    fontSize: 15,
+    color: "#444",
+    marginVertical: 4,
+  },
+  status: {
+    fontSize: 15,
+    color: "#4CAF50",
     fontWeight: "500",
+    marginTop: 8,
   },
-  icons: {
-    flexDirection: "row",
-  },
-  icon: {
-    marginLeft: 15,
-  },
-  descriptionInput: {
-    backgroundColor: "#F0F0F0",
-    height: 40,
-    marginTop: 10,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    fontSize: 16,
-  },
-  addAssigneeText: {
-    marginTop: 15,
-    fontSize: 16,
-  },
-  bottomRow: {
+  buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
     marginTop: 20,
   },
-  doneButton: {
-    backgroundColor: "#000",
-    borderRadius: 5,
-    paddingVertical: 5,
+  editButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#3B82F6",
+    paddingVertical: 10,
     paddingHorizontal: 20,
+    borderRadius: 8,
   },
-  doneButtonText: {
-    color: "#FFF",
+  deleteButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#E63946",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  buttonText: {
+    color: "white",
     fontSize: 16,
+    fontWeight: "600",
+    marginLeft: 8,
   },
 });
 

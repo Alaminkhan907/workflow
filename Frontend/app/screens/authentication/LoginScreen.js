@@ -31,7 +31,7 @@ const LoginScreen = ({ navigation, onLogin }) => {
         },
         body: JSON.stringify(loginData),
       });
-      console.log(loginData);
+
       const data = await response.json();
 
       if (response.ok) {
@@ -43,7 +43,11 @@ const LoginScreen = ({ navigation, onLogin }) => {
           loginTime: Date.now(),
         };
         await AsyncStorage.setItem("loginInfo", JSON.stringify(loginInfo));
+
+        // Call onLogin to update the authentication state in AppNavigator
         onLogin();
+
+        // Navigate to the main app flow
         navigation.replace("UserTabs", { role });
       } else {
         Alert.alert("Error", data.message || "Login failed");
@@ -57,12 +61,11 @@ const LoginScreen = ({ navigation, onLogin }) => {
   const checkLoginStatus = async () => {
     try {
       const loginInfo = await AsyncStorage.getItem("loginInfo");
-      console.log("Login Info:", loginInfo);
       if (loginInfo) {
         const { loginTime, role } = JSON.parse(loginInfo);
         const currentTime = Date.now();
 
-        if (currentTime - loginTime < 3600000) {
+        if (currentTime - loginTime < 3600000) { // Check if logged in within the last hour
           onLogin();
           navigation.replace("UserTabs", { role });
         } else {
@@ -72,16 +75,17 @@ const LoginScreen = ({ navigation, onLogin }) => {
     } catch (error) {
       console.error("Error checking login status:", error);
     }
-    useEffect(() => {
-      checkLoginStatus();
-    }, []);
-
-    useFocusEffect(() => {
-      React.useCallback(() => {
-        checkLoginStatus();
-      });
-    }, []);
   };
+
+  useEffect(() => {
+    checkLoginStatus();
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      checkLoginStatus();
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
@@ -100,7 +104,7 @@ const LoginScreen = ({ navigation, onLogin }) => {
         secureTextEntry
       />
       <TouchableOpacity onPress={() => navigation.replace("ForgotPassword")}>
-        <Text style={styles.loginLinkText}>Forgot Password ?</Text>
+        <Text style={styles.loginLinkText}>Forgot Password?</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>

@@ -18,8 +18,8 @@ const AboutScreen = ({ navigation }) => {
       />
 
       {/* User Info */}
-      <Text style={styles.nameText}>Jan</Text>
-      <Text style={styles.usernameText}>@Jantheboss</Text>
+      <Text style={styles.nameText}>Boss</Text>
+      <Text style={styles.usernameText}>@boss</Text>
       <Text style={styles.roleText}>Manager</Text>
 
       {/* Edit Profile Button */}

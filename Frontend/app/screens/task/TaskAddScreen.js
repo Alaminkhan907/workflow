@@ -13,19 +13,23 @@ import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
-const AddProjectScreen = ({ navigation }) => {
+const TaskAddScreen = ({ navigation, route }) => {
+  const {project} = route.params;
+  console.log("Project unpacked ", project);
   
-  const [projectName, setProjectName] = useState("");
+  const [taskName, setTaskName] = useState("");
   const [dueDate, setDueDate] = useState(null);
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("pending");
   const [assignee, setAssignee] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [urgent, setUrgent] = useState("false");
 
 
   const handleSubmit = async () => {
-    if (!projectName.trim()) {
-      Alert.alert("Validation Error", "Please enter the project name.");
+    console.log("Submit task button clicked");
+    if (!taskName.trim()) {
+      Alert.alert("Validation Error", "Please enter the task name.");
       return;
     }
 
@@ -35,49 +39,62 @@ const AddProjectScreen = ({ navigation }) => {
       return;
     }
   
-    if (!dueDate) {
-      Alert.alert("Validation Error", "Please select a due date.");
+    // if (!dueDate) {
+    //   Alert.alert("Validation Error", "Please select a due date.");
+    //   return;
+
+    // }
+
+    if (!urgent) {
+      Alert.alert("Validation Error", "Please select if the task is urgent.");
+      console.log("Urgency not selected");
       return;
+      
     }
-    const newProject = {
-      name: projectName,
-      dueDate: dueDate.toISOString().split("T")[0], 
+
+
+    const newTask = {
+      name: taskName,
+      //dueDate: dueDate.toISOString().split("T")[0], 
+      dueDate: "2024-11-10T00:00:00Z",
       description: description,
       status: status,
       assignee: assignee,
       createdAt: new Date(),
+      urgent: urgent,
+      project: project._id
     };
 
-    console.log("Project Created: ", newProject);
+    console.log("Task Created: ", newTask);
 
     try {
-      const response = await fetch(`${API_URL}/addProject`, {
+      const response = await fetch(`${API_URL}/addTask/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newProject), 
+        body: JSON.stringify(newTask), 
       });
 
       if (response.ok) {
         const data = await response.json();
         Alert.alert(
-          "Project Created",
-          `Project "${projectName}" has been created on the server.`
+          "Task Created",
+          `Task "${taskName}" has been created on the server.`
         );
         console.log("Response from server: ", data);
 
-        navigation.replace("ProjectScreen");
+        navigation.replace("TaskScreen", {project})
       } else {
         const errorData = await response.json();
-        console.error("Error creating project: ", errorData);
-        Alert.alert("Error", "Failed to create project on the server.");
+        console.error("Error creating task: ", errorData);
+        Alert.alert("Error", "Failed to create task on the server.");
       }
     } catch (error) {
       console.error("Network error: ", error);
       Alert.alert(
         "Error",
-        "An error occurred while sending the project to the server."
+        "An error occurred while sending the task to the server."
       );
     }
   };
@@ -95,10 +112,11 @@ const AddProjectScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       {/* Back Button */}
+      <View style={styles.top}>
       <TouchableOpacity
         onPress={() => {
           console.log("Back button pressed");
-          navigation.replace("ProjectScreen");
+          navigation.replace("TaskScreen");
           // navigation.goBack();
         }}
         style={styles.backButton}
@@ -106,13 +124,14 @@ const AddProjectScreen = ({ navigation }) => {
         <Ionicons name="arrow-back" size={24} color="black" />
       </TouchableOpacity>
 
-      {/* Project Input Fields */}
-      <Text style={styles.title}>Add New Project</Text>
+      {/* Task Input Fields */}
+      <Text style={styles.title}>Add New Task</Text>
+      </View>
       <TextInput
         style={styles.input}
-        placeholder="Project Name"
-        value={projectName}
-        onChangeText={setProjectName}
+        placeholder="Task Name"
+        value={taskName}
+        onChangeText={setTaskName}
       />
 
       <TextInput
@@ -157,13 +176,28 @@ const AddProjectScreen = ({ navigation }) => {
         </Picker>
       </View>
 
+      <View style={styles.pickerContainer}>
+        <Text style={styles.label}>Urgent:</Text>
+        <Picker
+          selectedValue={urgent}
+          style={styles.picker}
+          onValueChange={(itemValue) => setUrgent(itemValue)}
+        >
+          <Picker.Item label="No" value="false" />
+          <Picker.Item label="Yes" value="true" />
+          
+        </Picker>
+      </View>
+
+      
+
       {/* Submit Button */}
-      <Button title="Create Project" onPress={handleSubmit} />
+      <Button title="Create Task" onPress={handleSubmit} />
     </View>
   );
 };
 
-export default AddProjectScreen;
+export default TaskAddScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -171,15 +205,21 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "#f5f5f5",
   },
+  top: {
+    display: 'flex',
+    flexDirection: 'row',
+    marginBottom: 20,
+  },
   backButton: {
     alignSelf: "flex-start",
-    marginBottom: 20,
+   
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
     textAlign: "center",
+    left: 15,
+
   },
   input: {
     borderWidth: 1,
