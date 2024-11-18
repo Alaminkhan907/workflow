@@ -27,6 +27,17 @@ test_backend:
   only:
     - automated-testing-test
 
+test_frontend:
+  stage: test
+  script:
+    - echo "Running frontend tests..."
+    - cd ./Frontend
+    - npm install
+    - npm install --save-dev jest @testing-library/react-native react-test-renderer # should install test
+    - npm test -- --detectOpenHandles --runInBand # for jest
+  only:
+    - automated-testing-test
+
 deploy_app:
   stage: deploy
   script: 

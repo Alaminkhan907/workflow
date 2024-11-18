@@ -40,7 +40,26 @@
     "Universal-work-flow": "file:"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "@testing-library/jest-native": "^5.4.3",
+    "@testing-library/react-native": "^12.8.1",
+    "jest": "^29.7.0",
+    "react-test-renderer": "^18.2.0"
   },
-  "private": true
+  "private": true,
+  "jest": {
+    "preset": "react-native",
+    "setupFilesAfterEnv": [
+      "@testing-library/jest-native/extend-expect"
+    ],
+    "testTimeout": 20000,
+    "transformIgnorePatterns": [
+      "node_modules/(?!(react-native|@react-native|@expo/vector-icons|@react-navigation|@react-native-community/datetimepicker)/)"
+    ],
+    "moduleNameMapper": {
+      "^@react-native-async-storage/async-storage$": "<rootDir>/__mocks__/@react-native-async-storage/async-storage.js",
+    "^@expo/vector-icons$": "<rootDir>/__mocks__/@expo/vector-icons.js",
+    "^@react-native-community/datetimepicker$": "<rootDir>/__mocks__/@react-native-community/datetimepicker.js"
+    }
+  }
 }
