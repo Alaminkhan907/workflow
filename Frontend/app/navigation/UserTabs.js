@@ -33,7 +33,7 @@ const UserTabs = () => (
         ),
       }}
     />
-    <Tab.Screen
+      <Tab.Screen
       name="Tasks"
       component={TaskScreen}
       options={{

@@ -9,6 +9,7 @@ import {
   Button,
   TextInput,
   Icon,
+  Picker
 } from "react-native";
 import { Table, Row, Rows } from 'react-native-table-component';
 import { useFocusEffect } from "@react-navigation/native";
@@ -17,19 +18,24 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 const TaskScreen = ({ route, navigation }) => {
   console.log("This should be route.params " + JSON.stringify(route.params?.project, null, 2));
   //const project = {"_id": "673211b4376082018f99cfa2", "name": "Test project"};
-  const {project} = route.params;
-  console.log("Project unpacked ", project);
+  const {project} = route.params ?? {}; //check if project is
   const tableHead = ['Task', 'Deadline', 'Progress'];
   const [tasks, setTasks] = useState([]);
-  console.log("Passing parameter " + project._id);
 
 
   const fetchTasks = async () => {
     try {
-      const response = await fetch(`${API_URL}/getTasksByProject/${project._id}`); 
+      let response;
+      if (project) {
+      console.log("Project object is found");
+      response = await fetch(`${API_URL}/getTasksByProject/${project._id}`); 
+      // } else {
+      //   console.log("Project object is not found");
+      // response = await fetch(`${API_URL}/getTask`); 
+      // }
       const data = await response.json();
       setTasks(data);
-    } catch (error) {
+    } } catch (error) {
       console.error("Error fetching projects:", error);
     }
   };
@@ -53,7 +59,31 @@ const TaskScreen = ({ route, navigation }) => {
 
   // Map the fetched tasks to the table data format
   const tableData = tasks.map(task =>
-    task.urgent
+    {
+      const handleStatusChange = async (newStatus) => {
+        try {
+          const response = await fetch(`${API_URL}/editTask/${task._id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ status: newStatus }),
+          });
+    
+          if (response.ok) {
+            const updatedTasks = tasks.map((t) =>
+              t._id === task._id ? { ...t, status: newStatus } : t
+            );
+            setTasks(updatedTasks); // Update tasks state to reflect the change
+          } else {
+            console.error("Failed to update status");
+          }
+        } catch (error) {
+          console.error("Error updating status:", error);
+        }
+      };
+    
+      return task.urgent
       ? [
           [task.name,
           <View style={styles.urgentIcon}>
@@ -64,7 +94,16 @@ const TaskScreen = ({ route, navigation }) => {
             />
           </View>],
           new Date(task.dueDate).toLocaleDateString(), // Format date as needed
-          [task.status, <div style={styles.editIcon} >
+          [<Picker
+            selectedValue={task.status}
+            style={{ height: 50, width: 150 }}
+            onValueChange={(itemValue) => handleStatusChange(itemValue)}
+          >
+            <Picker.Item label="Pending" value="pending" />
+            <Picker.Item label="In Progress" value="in_progress" />
+            <Picker.Item label="Completed" value="completed" />
+          </Picker>
+          ,<div style={styles.editIcon} >
             <MaterialCommunityIcons onPress={() => handleEditClick(task)}
               name="circle-edit-outline"
               size={24}
@@ -76,7 +115,15 @@ const TaskScreen = ({ route, navigation }) => {
       : [
           task.name,
           new Date(task.dueDate).toLocaleDateString(),
-          [task.status, <div style={styles.editIcon} >
+          [  <Picker
+            selectedValue={task.status}
+            style={{ height: 50, width: 150 }}
+            onValueChange={(itemValue) => handleStatusChange(itemValue)}
+          >
+            <Picker.Item label="Pending" value="pending" />
+            <Picker.Item label="In Progress" value="in_progress" />
+            <Picker.Item label="Completed" value="completed" />
+          </Picker>, <div style={styles.editIcon} >
             <MaterialCommunityIcons onPress={() => handleEditClick(task)}
               name="circle-edit-outline"
               size={24}
@@ -85,15 +132,16 @@ const TaskScreen = ({ route, navigation }) => {
           </div>]
       
         ]
-  );
+});
 
 
 
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>{project.name}
-      
+      <Text style={styles.header}>
+      {project ? project.name : null}
+        
         <TouchableOpacity
           >
             <View style={styles.newProjectButton}>
