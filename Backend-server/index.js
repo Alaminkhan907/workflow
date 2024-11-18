@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 require("dotenv").config();
-mongoose.set('strictQuery', true);
+mongoose.set("strictQuery", true);
 
 const Project = require("./projectModel");
 const User = require("./userModel");
@@ -13,8 +13,7 @@ const Task = require("./taskModel");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const HOST = process.env.HOST || '0.0.0.0';
-
+const HOST = process.env.HOST || "0.0.0.0";
 
 app.use(
   cors({
@@ -24,28 +23,10 @@ app.use(
 app.use(bodyParser.json());
 app.use(express.json());
 
-// MongoDB connection
-// mongoose.connect("mongodb://127.0.0.1:27017/workflow", {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// });
-
-if (process.env.NODE_ENV !== "test") {
-  mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", () => {
-  console.log("Connected to MongoDB");
-});
-
-// Test route
 app.get("/", (req, res) => {
   res.send("Hello World from Node.js & MongoDB!");
 });
+
 
 // JWT Middleware
 const protect = async (req, res, next) => {
@@ -133,7 +114,6 @@ app.post("/addProject", (req, res) => {
   });
 });
 
-
 app.get("/getProject", (req, res) => {
   Project.find({}, (err, result) => {
     if (err) {
@@ -152,14 +132,12 @@ app.get("/getProject/:id", (req, res) => {
     if (!project) {
       return res.status(404).send("Project not found");
     }
-    res.status(200).json(Project);
+    res.status(200).json(project);
   });
 });
 
-
-
 // Route to edit a project
-app.put("/editProject/:id",  (req, res) => {
+app.put("/editProject/:id", (req, res) => {
   Project.findByIdAndUpdate(
     req.params.id,
     req.body,
@@ -177,7 +155,7 @@ app.put("/editProject/:id",  (req, res) => {
 });
 
 // Route to delete a project
-app.delete("/deleteProject/:id",  (req, res) => {
+app.delete("/deleteProject/:id", (req, res) => {
   Project.findByIdAndDelete(req.params.id, (err, project) => {
     if (err) {
       return res.status(500).send(err);
@@ -188,13 +166,12 @@ app.delete("/deleteProject/:id",  (req, res) => {
     res.status(200).send("Project deleted successfully");
   });
 });
-/* Duplicating what was done for projects. 
-Ideally the projects API endpoints would also both projects and tasks and then do actions depending on whether task or project query arrived */
+
 // Protected task Route
 app.post("/addTask", (req, res) => {
   const { name, dueDate, description, status, assignee, urgent, project } = req.body;
   var project_id = mongoose.Types.ObjectId(project);
-  const newTask = new Task({ name, dueDate, description, status, assignee, urgent, project_id});
+  const newTask = new Task({ name, dueDate, description, status, assignee, urgent, project_id });
 
   newTask.save((err, task) => {
     if (err) {
@@ -203,7 +180,6 @@ app.post("/addTask", (req, res) => {
     res.status(201).send(task);
   });
 });
-
 
 app.get("/getTask", (req, res) => {
   Task.find({}, (err, result) => {
@@ -221,33 +197,29 @@ app.get("/getTask/:id", (req, res) => {
       return res.status(500).send(err);
     }
     if (!task) {
-      return res.status(404).send("Project not found");
+      return res.status(404).send("Task not found");
     }
-    res.status(200).json(Task);
+    res.status(200).json(task);
   });
 });
 
 app.get("/getTasksByProject/:id", (req, res) => {
   const propertyId = req.params.id;
-  console.log("This is propertyId " + propertyId);
-  var id = mongoose.Types.ObjectId(propertyId);
-  console.log("This is objectId " + id);
+  const id = mongoose.Types.ObjectId(propertyId);
 
-  Task.find({ project: id}, (err, tasks) => {
+  Task.find({ project: id }, (err, tasks) => {
     if (err) {
       return res.status(500).send(err);
     }
-      if (!tasks) {
-        return res.status(400).send("Project ID is required");
-      }
+    if (!tasks) {
+      return res.status(400).send("Project ID is required");
+    }
     res.status(200).json(tasks);
   });
 });
 
-
-
-// Route to edit a project
-app.put("/editTask/:id",  (req, res) => {
+// Route to edit a task
+app.put("/editTask/:id", (req, res) => {
   Task.findByIdAndUpdate(
     req.params.id,
     req.body,
@@ -264,8 +236,8 @@ app.put("/editTask/:id",  (req, res) => {
   );
 });
 
-// Route to delete a project
-app.delete("/deleteTask/:id",  (req, res) => {
+// Route to delete a task
+app.delete("/deleteTask/:id", (req, res) => {
   Task.findByIdAndDelete(req.params.id, (err, task) => {
     if (err) {
       return res.status(500).send(err);
@@ -277,9 +249,23 @@ app.delete("/deleteTask/:id",  (req, res) => {
   });
 });
 
-app.listen(PORT, HOST, () => {
-  console.log(`Server running on http://${HOST}:${PORT}`);
-});
+// Conditional MongoDB Connection and Server Initialization
+// for testing
+if (process.env.NODE_ENV !== "test") {
+  mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+
+  const db = mongoose.connection;
+  db.on("error", console.error.bind(console, "connection error:"));
+  db.once("open", () => {
+    console.log("Connected to MongoDB");
+  });
+
+  app.listen(PORT, HOST, () => {
+    console.log(`Server running on http://${HOST}:${PORT}`);
+  });
 }
 
 module.exports = app;
