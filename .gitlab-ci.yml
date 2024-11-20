@@ -2,7 +2,8 @@ image: node:18
 
 stages:          
   - build
-  - test
+  - backend_test
+  - frontend_test
   - deploy
 
 build_app:
@@ -17,16 +18,27 @@ build_app:
     - master
 
 backend_test:
-  stage: test
+  stage: backend_test
   script:
     - echo "Running backend tests..."
     - cd ./Backend-server
     - npm install
     - npm install --save-dev jest supertest mongodb-memory-server
     - npm test
-  only: 
+  only: iteration3
+
+frontend_test:
+  stage: frontend_test
+  script:
+    - echo "Running frontend tests..."
+    - cd ./Frontend
+    - npm install
+    - npm install babel-preset-expo @babel/preset-flow metro-react-native-babel-preset react-native-dotenv --save-dev
+    - npx jest --clearCache
+    - npm test
+  only:
     - iteration3
-  
+
 deploy_app:
   stage: deploy
   script: 
@@ -39,3 +51,5 @@ deploy_app:
     - echo "Deploy complete."
   only:
     - master
+
+    
