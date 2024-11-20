@@ -24,7 +24,8 @@ backend_test:
     - npm install
     - npm install --save-dev jest supertest mongodb-memory-server
     - npm test
-  only: iteration3
+  only: 
+    - iteration3
   
 deploy_app:
   stage: deploy
