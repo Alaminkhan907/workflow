@@ -25,7 +25,8 @@ backend_test:
     - npm install
     - npm install --save-dev jest supertest mongodb-memory-server
     - npm test
-  only: iteration3
+  only: 
+    - iteration3
 
 frontend_test:
   stage: frontend_test
