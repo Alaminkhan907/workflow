@@ -2,6 +2,7 @@ image: node:18
 
 stages:          
   - build
+  - test
   - deploy
 
 build_app:
@@ -15,6 +16,16 @@ build_app:
   only:
     - master
 
+backend_test:
+  stage: test
+  script:
+    - echo "Running backend tests..."
+    - cd ./Backend-server
+    - npm install
+    - npm install --save-dev jest supertest mongodb-memory-server
+    - npm test
+  only: iteration3
+  
 deploy_app:
   stage: deploy
   script: 
@@ -27,5 +38,3 @@ deploy_app:
     - echo "Deploy complete."
   only:
     - master
-
-    

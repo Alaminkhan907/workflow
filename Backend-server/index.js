@@ -30,16 +30,19 @@ app.use(express.json());
 //   useUnifiedTopology: true,
 // });
 
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+// Conditional MongoDB connection
+if (process.env.NODE_ENV !== 'test') {
+  mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
 
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", () => {
-  console.log("Connected to MongoDB");
-});
+  const db = mongoose.connection;
+  db.on('error', console.error.bind(console, 'connection error:'));
+  db.once('open', () => {
+    console.log('Connected to MongoDB');
+  });
+}
 
 // Test route
 app.get("/", (req, res) => {
@@ -278,6 +281,10 @@ app.delete("/deleteTask/:id",  (req, res) => {
   });
 });
 
-app.listen(PORT, HOST, () => {
-  console.log(`Server running on http://${HOST}:${PORT}`);
-});
+if (process.env.NODE_ENV !== "test") {
+  app.listen(PORT, HOST, () => {
+    console.log(`Server running on http://${HOST}:${PORT}`);
+  });
+}
+
+module.exports = app;
