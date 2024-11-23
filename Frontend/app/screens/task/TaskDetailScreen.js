@@ -230,10 +230,10 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 5,
   },
   projectList: {
-    marginBottom: 20,
+    marginBottom: 5,
   },
   projectButton: {
     marginRight: 10,
@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
   },
   tasksContainer: {
     flex: 1,
-    marginBottom: 20,
+    marginBottom: 5,
   },
   tasksHeader: {
     flexDirection: "row",
@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
   emptyText: {
     textAlign: "center",
     color: "#6c757d",
-    marginTop: 20,
+    marginTop: 5,
   },
   modalContent: {
     flex: 1,
@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
   modalActions: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 20,
+    marginTop: 5,
   },
 });
 

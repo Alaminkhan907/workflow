@@ -7,14 +7,12 @@ const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 require("dotenv").config();
-mongoose.set("strictQuery", true);
 
 const Project = require("./projectModel");
 const Task = require("./taskModel");
 const User = require("./userModel");
 const ChatRoom = require("./chatRoomModel");
 
-//new from here
 const app = express();
 const server = http.Server(app);
 const io = socketIO(server, {
@@ -22,14 +20,16 @@ const io = socketIO(server, {
     origin: "*",
   },
 });
+
+// Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
+app.use(bodyParser.json());
 
+// Environment variables
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || "0.0.0.0";
-app.use(bodyParser.json());
-app.use(express.json());
 
 // MongoDB connection
 mongoose.connect("mongodb://127.0.0.1:27017/workflow", {
@@ -37,21 +37,15 @@ mongoose.connect("mongodb://127.0.0.1:27017/workflow", {
   useUnifiedTopology: true,
 });
 
-// mongoose.connect(process.env.MONGO_URI, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// });
-
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
   console.log("Connected to MongoDB");
 });
 
-//new from here
+// Helper to generate random IDs
 const generateID = () => Math.random().toString(36).substring(2, 10);
 
-// Socket.IO functionality
 io.on("connection", (socket) => {
   console.log(`⚡: ${socket.id} user just connected!`);
 
@@ -59,9 +53,9 @@ io.on("connection", (socket) => {
   socket.on("createRoom", async (name) => {
     try {
       const room = new ChatRoom({ name, messages: [] });
-      await room.save(); // Save room in DB
-      const chatRooms = await ChatRoom.find(); // Fetch all rooms from DB
-      io.emit("roomsList", chatRooms); // Broadcast updated rooms
+      await room.save();
+      const chatRooms = await ChatRoom.find();
+      io.emit("roomsList", chatRooms);
     } catch (err) {
       console.error("Error creating room:", err);
     }
@@ -92,8 +86,8 @@ io.on("connection", (socket) => {
           time: `${timestamp.hour}:${timestamp.mins}`,
         };
 
-        room.messages.push(newMessage); // Add new message to room
-        await room.save(); // Save the updated room in DB
+        room.messages.push(newMessage);
+        await room.save();
 
         // Emit updated messages to the room
         socket.to(room.name).emit("roomMessage", newMessage);
@@ -119,6 +113,10 @@ io.on("connection", (socket) => {
   });
 });
 
+// Example Express APIs (for testing)
+app.get("/", (req, res) => {
+  res.send("Server is up and running!");
+});
 // JWT Middleware
 const protect = async (req, res, next) => {
   let token;
@@ -374,6 +372,7 @@ app.delete("/deleteTasks/:taskId", async (req, res) => {
   }
 });
 
+// Routes for Chat Rooms (as before)
 app.get("/message", async (req, res) => {
   try {
     const chatRooms = await ChatRoom.find();
@@ -388,6 +387,7 @@ app.get("/message", async (req, res) => {
     res.status(500).json({ error: "Error fetching chat rooms" });
   }
 });
+
 app.post("/message", async (req, res) => {
   try {
     const { name, messages } = req.body;
@@ -413,6 +413,7 @@ app.post("/message", async (req, res) => {
   }
 });
 
-app.listen(PORT, HOST, () => {
+// Start the server with Socket.IO
+server.listen(PORT, HOST, () => {
   console.log(`Server running on http://${HOST}:${PORT}`);
 });

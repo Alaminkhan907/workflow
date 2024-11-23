@@ -16,6 +16,9 @@ import LoginScreen from "../screens/authentication/LoginScreen";
 import SignupScreen from "../screens/authentication/SignupScreen";
 import ForgotPasswordScreen from "../screens/authentication/ForgotScreen";
 
+import Chat from "../screens/communication/screens/Chat";
+import Messaging from "../screens/communication/screens/Messaging";
+
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import Feather from "@expo/vector-icons/Feather";
@@ -56,8 +59,14 @@ const DashboardStack = () => (
 
 const TaskStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
-    <Stack.Screen name="Task" component={TaskScreen} />
+    {/* <Stack.Screen name="Task" component={TaskScreen} /> */}
     <Stack.Screen name="TaskDetailScreen" component={TaskDetailScreen} />
+  </Stack.Navigator>
+);
+const MessageStack = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="Chat" component={Chat} />
+    <Stack.Screen name="Messaging" component={Messaging} />
   </Stack.Navigator>
 );
 const AuthenticationStack = ({ onLogin }) => (
@@ -130,6 +139,15 @@ const AppNavigator = () => {
                 <Feather name="info" size={24} color={color} />
               ),
               tabBarLabel: "About",
+            }}
+          />
+          <Tab.Screen
+            name="Chat"
+            component={MessageStack}
+            options={{
+              tabBarIcon: ({ color }) => (
+                <Feather name="message-circle" size={24} color={color} />
+              ),
             }}
           />
         </Tab.Navigator>

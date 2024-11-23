@@ -17,8 +17,6 @@ import SignupScreen from "../screens/authentication/SignupScreen";
 import ForgotPasswordScreen from "../screens/authentication/ForgotScreen";
 import Messaging from "../screens/communication/screens/Messaging";
 import Chat from "../screens/communication/screens/Chat";
-import Login from "../screens/communication/screens/Login";
-import Task from "../screens/task/TestTask";
 
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
