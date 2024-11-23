@@ -8,6 +8,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import Chat from "../screens/communication/screens/Chat";
 
 const Tab = createBottomTabNavigator();
 
@@ -51,6 +52,16 @@ const UserTabs = () => (
           <Feather name="info" size={24} color="black" />
         ),
         tabBarLabel: "About",
+      }}
+    />{" "}
+    <Tab.Screen
+      name="Chat"
+      component={Chat}
+      options={{
+        tabBarIcon: ({ color, size }) => (
+          <Feather name="info" size={24} color="black" />
+        ),
+        tabBarLabel: "Chat",
       }}
     />
   </Tab.Navigator>

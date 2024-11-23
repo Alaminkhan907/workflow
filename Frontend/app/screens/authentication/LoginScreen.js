@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { API_URL } from '@env';
+import { API_URL } from "@env";
 import {
   View,
   Text,
@@ -25,6 +25,7 @@ const LoginScreen = ({ navigation, onLogin }) => {
 
     try {
       const response = await fetch(`${API_URL}/login`, {
+        // const response = await fetch("http://localhost:3000/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,7 +43,8 @@ const LoginScreen = ({ navigation, onLogin }) => {
           role,
           loginTime: Date.now(),
         };
-        await AsyncStorage.setItem("loginInfo", JSON.stringify(loginInfo));
+        // await AsyncStorage.setItem("loginInfo", JSON.stringify(loginInfo));
+        await AsyncStorage.setItem("username", email);
         onLogin();
         navigation.replace("UserTabs", { role });
       } else {

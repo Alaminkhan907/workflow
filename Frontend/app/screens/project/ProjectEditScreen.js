@@ -16,7 +16,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 const ProjectEditScreen = ({ route, navigation }) => {
   const { projectId } = route.params;
 
-  const [taskName, setTaskName] = useState("");
+  const [ProjectName, setProjectName] = useState("");
   const [dueDate, setDueDate] = useState(new Date());
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("pending");
@@ -24,10 +24,10 @@ const ProjectEditScreen = ({ route, navigation }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   useEffect(() => {
-    fetch(`${API_URL}/gettask/${projectId}`)
+    fetch(`${API_URL}/getProject/${projectId}`)
       .then((response) => response.json())
       .then((data) => {
-        setTaskName(data.name);
+        setProjectName(data.name);
         setDueDate(new Date(data.dueDate));
         setDescription(data.description);
         setStatus(data.status);
@@ -40,8 +40,8 @@ const ProjectEditScreen = ({ route, navigation }) => {
   }, [projectId]);
 
   const handleSubmit = async () => {
-    const updatedTask = {
-      name: taskName,
+    const updatedProject = {
+      name: ProjectName,
       dueDate: dueDate.toISOString().split("T")[0],
       description,
       status,
@@ -50,22 +50,22 @@ const ProjectEditScreen = ({ route, navigation }) => {
     };
 
     try {
-      const response = await fetch(`${API_URL}/edittask/${projectId}`, {
+      const response = await fetch(`${API_URL}/editProject/${projectId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(updatedTask),
+        body: JSON.stringify(updatedProject),
       });
 
       if (response.ok) {
-        Alert.alert("Success", `Task "${taskName}" has been updated.`);
+        Alert.alert("Success", `Project "${ProjectName}" has been updated.`);
         navigation.replace("NewProject");
       } else {
-        Alert.alert("Error", "Failed to update task on the server.");
+        Alert.alert("Error", "Failed to update Project on the server.");
       }
     } catch (error) {
-      Alert.alert("Error", "An error occurred while updating the task.");
+      Alert.alert("Error", "An error occurred while updating the Project.");
     }
   };
 
@@ -78,17 +78,20 @@ const ProjectEditScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={styles.backButton}
+      >
         <Ionicons name="arrow-back" size={24} color="black" />
       </TouchableOpacity>
 
-      <Text style={styles.title}>Edit Task</Text>
+      <Text style={styles.title}>Edit Project</Text>
 
       <TextInput
         style={styles.input}
-        placeholder="Task Name"
-        value={taskName}
-        onChangeText={setTaskName}
+        placeholder="Project Name"
+        value={ProjectName}
+        onChangeText={setProjectName}
       />
 
       <TextInput
@@ -136,7 +139,7 @@ const ProjectEditScreen = ({ route, navigation }) => {
       </View>
 
       <TouchableOpacity style={styles.updateButton} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Update Task</Text>
+        <Text style={styles.buttonText}>Update Project</Text>
       </TouchableOpacity>
     </View>
   );

@@ -1,11 +1,42 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
 const AboutScreen = ({ navigation }) => {
+  const [getProfile, setProfile] = useState(null);
+
   const handleLogout = () => {
     navigation.navigate("Login");
   };
+
+  const fetchProfile = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/profile");
+      if (!response.ok) {
+        throw new Error("Failed to fetch profile");
+      }
+      const data = await response.json();
+      // Use the first object if the API returns an array
+      setProfile(data[0] || null);
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchProfile();
+    }, [])
+  );
+
+  if (!getProfile) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading profile...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -18,9 +49,10 @@ const AboutScreen = ({ navigation }) => {
       />
 
       {/* User Info */}
-      <Text style={styles.nameText}>Jan</Text>
-      <Text style={styles.usernameText}>@Jantheboss</Text>
-      <Text style={styles.roleText}>Manager</Text>
+
+      <Text style={styles.nameText}>{getProfile.name}</Text>
+      <Text style={styles.usernameText}>{getProfile.email}</Text>
+      <Text style={styles.roleText}>{getProfile.role}</Text>
 
       {/* Edit Profile Button */}
       <TouchableOpacity style={styles.editProfileButton}>

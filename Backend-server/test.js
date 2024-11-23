@@ -1,6 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const http = require("http");
+const socketIO = require("socket.io");
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -10,26 +12,22 @@ mongoose.set("strictQuery", true);
 const Project = require("./projectModel");
 const Task = require("./taskModel");
 const User = require("./userModel");
+const ChatRoom = require("./chatRoomModel");
 
 //new from here
 const app = express();
-const http = require("http").Server(app);
-const socketIO = require("socket.io")(http, {
+const server = http.Server(app);
+const io = socketIO(server, {
   cors: {
-    origin: "http://localhost:8081",
+    origin: "*",
   },
 });
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(cors());
 
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || "0.0.0.0";
-
-// app.use(
-//   cors({
-//     origin: "*",
-//   })
-// );
 app.use(bodyParser.json());
 app.use(express.json());
 
@@ -52,53 +50,73 @@ db.once("open", () => {
 
 //new from here
 const generateID = () => Math.random().toString(36).substring(2, 10);
-let chatRooms = [];
 
-socketIO.on("connection", (socket) => {
+// Socket.IO functionality
+io.on("connection", (socket) => {
   console.log(`⚡: ${socket.id} user just connected!`);
 
-  socket.on("createRoom", (name) => {
-    socket.join(name);
-    chatRooms.unshift({ id: generateID(), name, messages: [] });
-    socket.emit("roomsList", chatRooms);
+  // Create a new chat room
+  socket.on("createRoom", async (name) => {
+    try {
+      const room = new ChatRoom({ name, messages: [] });
+      await room.save(); // Save room in DB
+      const chatRooms = await ChatRoom.find(); // Fetch all rooms from DB
+      io.emit("roomsList", chatRooms); // Broadcast updated rooms
+    } catch (err) {
+      console.error("Error creating room:", err);
+    }
   });
 
-  socket.on("findRoom", (id) => {
-    let result = chatRooms.filter((room) => room.id == id);
-    // console.log(chatRooms);
-    socket.emit("foundRoom", result[0].messages);
-    // console.log("Messages Form", result[0].messages);
+  // Find room messages
+  socket.on("findRoom", async (id) => {
+    try {
+      const room = await ChatRoom.findById(id);
+      if (room) {
+        socket.emit("foundRoom", room.messages);
+      }
+    } catch (err) {
+      console.error("Error finding room:", err);
+    }
   });
 
-  socket.on("newMessage", (data) => {
+  // Handle a new message
+  socket.on("newMessage", async (data) => {
     const { room_id, message, user, timestamp } = data;
-    let result = chatRooms.filter((room) => room.id == room_id);
-    const newMessage = {
-      id: generateID(),
-      text: message,
-      user,
-      time: `${timestamp.hour}:${timestamp.mins}`,
-    };
-    console.log("New Message", newMessage);
-    socket.to(result[0].name).emit("roomMessage", newMessage);
-    result[0].messages.push(newMessage);
 
-    socket.emit("roomsList", chatRooms);
-    socket.emit("foundRoom", result[0].messages);
+    try {
+      const room = await ChatRoom.findById(room_id);
+      if (room) {
+        const newMessage = {
+          text: message,
+          user,
+          time: `${timestamp.hour}:${timestamp.mins}`,
+        };
+
+        room.messages.push(newMessage); // Add new message to room
+        await room.save(); // Save the updated room in DB
+
+        // Emit updated messages to the room
+        socket.to(room.name).emit("roomMessage", newMessage);
+
+        // Update rooms and send them to the client
+        const chatRooms = await ChatRoom.find();
+        const rooms = chatRooms.map((room) => ({
+          id: room._id,
+          name: room.name,
+          messages: room.messages,
+        }));
+        socket.emit("roomsList", rooms);
+        socket.emit("foundRoom", room.messages);
+      }
+    } catch (err) {
+      console.error("Error handling new message:", err);
+    }
   });
+
+  // Handle user disconnect
   socket.on("disconnect", () => {
-    socket.disconnect();
     console.log("🔥: A user disconnected");
   });
-});
-
-app.get("/api", (req, res) => {
-  res.json(chatRooms);
-});
-
-// Test route
-app.get("/", (req, res) => {
-  res.send("Hello World from Node.js & MongoDB!");
 });
 
 // JWT Middleware
@@ -353,6 +371,45 @@ app.delete("/deleteTasks/:taskId", async (req, res) => {
     res.status(204).send();
   } catch (err) {
     res.status(500).send(err);
+  }
+});
+
+app.get("/message", async (req, res) => {
+  try {
+    const chatRooms = await ChatRoom.find();
+    const rooms = chatRooms.map((room) => ({
+      id: room._id,
+      name: room.name,
+      messages: room.messages,
+    }));
+    res.json(rooms);
+  } catch (err) {
+    console.error("Error fetching chat rooms:", err);
+    res.status(500).json({ error: "Error fetching chat rooms" });
+  }
+});
+app.post("/message", async (req, res) => {
+  try {
+    const { name, messages } = req.body;
+
+    // Check if the name already exists
+    const existingRoom = await ChatRoom.findOne({ name });
+    if (existingRoom) {
+      return res
+        .status(400)
+        .json({ error: "Chat room with this name already exists" });
+    }
+
+    // Create a new ChatRoom
+    const chatRoom = new ChatRoom({ name, messages });
+    await chatRoom.save();
+
+    res
+      .status(201)
+      .json({ message: "Chat room created successfully", chatRoom });
+  } catch (err) {
+    console.error("Error creating chat room:", err);
+    res.status(500).json({ error: "Error creating chat room" });
   }
 });
 

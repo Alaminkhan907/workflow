@@ -15,6 +15,10 @@ import ProjectEditScreen from "../screens/project/ProjectEditScreen";
 import TaskScreen from "../screens/task/TaskScreen";
 import SignupScreen from "../screens/authentication/SignupScreen";
 import ForgotPasswordScreen from "../screens/authentication/ForgotScreen";
+import Messaging from "../screens/communication/screens/Messaging";
+import Chat from "../screens/communication/screens/Chat";
+import Login from "../screens/communication/screens/Login";
+import Task from "../screens/task/TestTask";
 
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
@@ -30,8 +34,8 @@ const UserTabs = () => (
       name="Dashboard"
       component={DashboardScreen}
       options={{
-        tabBarIcon: ({ color, size }) => (
-          <MaterialCommunityIcons name="home-circle" size={24} color="black" />
+        tabBarIcon: ({ color }) => (
+          <MaterialCommunityIcons name="home-circle" size={24} color={color} />
         ),
       }}
     />
@@ -39,8 +43,8 @@ const UserTabs = () => (
       name="Project"
       component={ProjectScreen}
       options={{
-        tabBarIcon: ({ color, size }) => (
-          <FontAwesome5 name="tasks" size={24} color="black" />
+        tabBarIcon: ({ color }) => (
+          <FontAwesome5 name="tasks" size={24} color={color} />
         ),
       }}
     />
@@ -48,22 +52,29 @@ const UserTabs = () => (
       name="About"
       component={AboutScreen}
       options={{
-        tabBarIcon: ({ color, size }) => (
-          <Feather name="info" size={24} color="black" />
+        tabBarIcon: ({ color }) => (
+          <Feather name="info" size={24} color={color} />
         ),
       }}
     />
-    {/* <Tab.Screen name="New Project" component={NewProjectScreen} /> */}
     <Tab.Screen
       name="Task"
-      component={TaskScreen}
+      component={Task}
       options={{
-        tabBarIcon: ({ color, size }) => (
-          <MaterialIcons name="task" size={24} color="black" />
+        tabBarIcon: ({ color }) => (
+          <MaterialIcons name="task" size={24} color={color} />
         ),
       }}
     />
-    {/* <Tab.Screen name="Task 1" component={ProjectOne} /> */}
+    <Tab.Screen
+      name="Chat"
+      component={Chat}
+      options={{
+        tabBarIcon: ({ color }) => (
+          <Feather name="message-circle" size={24} color={color} />
+        ),
+      }}
+    />
   </Tab.Navigator>
 );
 
@@ -71,9 +82,9 @@ const AppNavigator = ({ route }) => {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Login" component={LoginScreen} />
+        {/* <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Signup" component={SignupScreen} />
-        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} /> */}
         <Stack.Screen name="UserTabs" component={UserTabs} />
         <Stack.Screen name="NewProject" component={NewProjectScreen} />
 
@@ -84,7 +95,9 @@ const AppNavigator = ({ route }) => {
         <Stack.Screen name="Project" component={ProjectScreen} />
         <Stack.Screen name="ProjectEditScreen" component={ProjectEditScreen} />
         <Stack.Screen name="TaskDetailScreen" component={TaskDetailScreen} />
-        <Stack.Screen name="Task" component={TaskScreen} />
+        {/* <Stack.Screen name="Task" component={TaskScreen} /> */}
+        <Stack.Screen name="Messaging" component={Messaging} />
+        <Stack.Screen name="Chat" component={Chat} />
         <Stack.Screen
           name="ProjectDetailScreen"
           component={ProjectDetailScreen}

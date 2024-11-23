@@ -19,7 +19,7 @@ const ProjectDetailScreen = ({ route, navigation }) => {
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(`${API_URL}/deletetask/${project._id}`, {
+      const response = await fetch(`${API_URL}/deleteProject/${project._id}`, {
         method: "DELETE",
       });
 
@@ -47,7 +47,9 @@ const ProjectDetailScreen = ({ route, navigation }) => {
 
       <View style={styles.card}>
         <Text style={styles.sectionTitle}>Description</Text>
-        <Text style={styles.description}>{project.description || "No description available."}</Text>
+        <Text style={styles.description}>
+          {project.description || "No description available."}
+        </Text>
       </View>
 
       <View style={styles.card}>
@@ -66,8 +68,8 @@ const ProjectDetailScreen = ({ route, navigation }) => {
       <View style={styles.card}>
         <Text style={styles.sectionTitle}>Timeline</Text>
         <Text style={styles.details}>
-          <Ionicons name="calendar-outline" size={16} color="#3B82F6" /> Due Date:{" "}
-          {project.dueDate || "Not specified"}
+          <Ionicons name="calendar-outline" size={16} color="#3B82F6" /> Due
+          Date: {project.dueDate || "Not specified"}
         </Text>
         <Text style={styles.details}>
           <Ionicons name="time-outline" size={16} color="#3B82F6" /> Created At:{" "}

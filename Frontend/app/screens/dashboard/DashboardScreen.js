@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { API_URL } from '@env';
+import { API_URL } from "@env";
 import {
   View,
   Text,
@@ -13,7 +13,7 @@ const DashboardScreen = ({ navigation }) => {
   // const [projects, setProjects] = useState([]);
 
   // useEffect(() => {
-  //   fetch("http://localhost:3000/gettask")
+  //   fetch("http://localhost:3000/getProject")
   //     .then((res) => res.json())
   //     .then((data) => setProjects(data));
   // }, []);
@@ -23,7 +23,7 @@ const DashboardScreen = ({ navigation }) => {
   const fetchProjects = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_URL}/gettask`);
+      const response = await fetch(`${API_URL}/getProject`);
       const data = await response.json();
       setProjects(data);
       setLoading(false);
@@ -74,20 +74,20 @@ const DashboardScreen = ({ navigation }) => {
         </View>
       </View>
 
-      <View style={styles.recentTasksSection}>
+      <View style={styles.recentProjectsSection}>
         <Text style={styles.sectionTitle}>Last Activity</Text>
 
         {/* Map over the sorted projects to display each one */}
         {sortedProjects.map((project) => (
-          <View key={project._id} style={styles.taskItem}>
-            <Text style={styles.taskTitle}>{project.name}</Text>
-            <Text style={styles.taskDate}>
+          <View key={project._id} style={styles.ProjectItem}>
+            <Text style={styles.ProjectTitle}>{project.name}</Text>
+            <Text style={styles.ProjectDate}>
               Created At: {new Date(project.createdAt).toLocaleString()}
             </Text>
-            <Text style={styles.taskDate}>
+            <Text style={styles.ProjectDate}>
               Due Date: {new Date(project.dueDate).toLocaleString()}
             </Text>
-            <Text style={styles.taskStatus}>Status: {project.status}</Text>
+            <Text style={styles.ProjectStatus}>Status: {project.status}</Text>
           </View>
         ))}
       </View>
@@ -142,10 +142,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#555",
   },
-  recentTasksSection: {
+  recentProjectsSection: {
     marginBottom: 20,
   },
-  taskItem: {
+  ProjectItem: {
     backgroundColor: "#FFF",
     padding: 15,
     borderRadius: 10,
@@ -156,15 +156,15 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 3,
   },
-  taskTitle: {
+  ProjectTitle: {
     fontSize: 16,
     fontWeight: "600",
   },
-  taskDate: {
+  ProjectDate: {
     fontSize: 14,
     color: "#777",
   },
-  taskStatus: {
+  ProjectStatus: {
     fontSize: 14,
     fontWeight: "bold",
     color: "#FF6347",
