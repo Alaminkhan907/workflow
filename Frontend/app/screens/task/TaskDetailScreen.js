@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState  } from "react";
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import {
   Modal,
   TouchableOpacity,
 } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 
 const TestTask = () => {
   const [projects, setProjects] = useState([]);
@@ -24,15 +25,24 @@ const TestTask = () => {
   });
   const [isAddTaskVisible, setIsAddTaskVisible] = useState(false);
 
-  // Fetch all projects
-  useEffect(() => {
-    fetch("http://localhost:3000/getProject")
-      .then((res) => res.json())
-      .then((data) => setProjects(data))
-      .catch((err) => console.error(err));
-  }, []);
 
-  // Fetch tasks for selected project
+  const fetchProjects = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/getProject");
+      const data = await res.json();
+      setProjects(data);
+    } catch (err) {
+      console.error("Error fetching projects:", err);
+    }
+  };
+
+ 
+  useFocusEffect(
+    useCallback(() => {
+      fetchProjects();
+    }, [])
+  );
+
   useEffect(() => {
     if (selectedProject) {
       fetch(`http://localhost:3000/getTasksByProject/${selectedProject._id}`)
@@ -41,6 +51,7 @@ const TestTask = () => {
         .catch((error) => console.error("Error fetching tasks:", error));
     }
   }, [selectedProject]);
+
 
   const handleAddTask = () => {
     if (!newTask.taskName || !newTask.dueDate || !selectedProject) {
@@ -100,6 +111,13 @@ const TestTask = () => {
         Alert.alert("Error", "Failed to delete task. Please try again.");
       });
   };
+
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchProjects();
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
@@ -233,7 +251,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   projectList: {
-    marginBottom: 5,
+    marginBottom: 1,
   },
   projectButton: {
     marginRight: 10,
@@ -303,7 +321,7 @@ const styles = StyleSheet.create({
   modalActions: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 5,
+    marginTop: 1,
   },
 });
 

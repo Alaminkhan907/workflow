@@ -7,7 +7,6 @@ const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 require("dotenv").config();
-const nodemailer = require("nodemailer");
 
 const Project = require("./projectModel");
 const Task = require("./taskModel");
@@ -114,16 +113,7 @@ io.on("connection", (socket) => {
   });
 });
 
-const transporter = nodemailer.createTransport({
-  host: 'smtp.ethereal.email',
-  port: 587,
-  auth: {
-      user: 'abbigail.wilkinson48@ethereal.email',
-      pass: 'VvbfZrFwAekFHCnAVs'
-  }
-});
-
-
+// Example Express APIs (for testing)
 app.get("/", (req, res) => {
   res.send("Server is up and running!");
 });
@@ -420,27 +410,6 @@ app.post("/message", async (req, res) => {
   } catch (err) {
     console.error("Error creating chat room:", err);
     res.status(500).json({ error: "Error creating chat room" });
-  }
-});
-
-
-// Email sending endpoint
-app.post("/send-email", async (req, res) => {
-  const { to, subject, text, html } = req.body;
-
-  try {
-    const info = await transporter.sendMail({
-      from: '"Workflow 👻" <workflow@workflow.com>',
-      to,
-      subject,
-      text,
-      html,
-    });
-
-    res.status(200).json({ message: "Email sent successfully", messageId: info.messageId });
-  } catch (error) {
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Failed to send email" });
   }
 });
 
