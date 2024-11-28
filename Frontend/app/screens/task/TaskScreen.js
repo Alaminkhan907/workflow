@@ -20,6 +20,7 @@ const TaskScreen = () => {
     dueDate: "",
     description: "",
     assignee: "",
+    priority: "",
   });
 
   // Fetch all projects
@@ -59,6 +60,7 @@ const TaskScreen = () => {
         dueDate: newTask.dueDate,
         description: newTask.description || "",
         assignee: newTask.assignee || "Unassigned",
+        priority: newTask.priority,
       }),
     })
       .then((response) => response.json())
@@ -66,7 +68,7 @@ const TaskScreen = () => {
         // Update tasks list with the newly added task
         setTasks((prevTasks) => [...prevTasks, newTaskData]);
         // Reset the new task form
-        setNewTask({ name: "", dueDate: "", description: "", assignee: "" });
+        setNewTask({ name: "", dueDate: "", description: "", assignee: "", priority: "" });
       })
       .catch((error) => console.error("Error adding task:", error));
   };
@@ -124,6 +126,7 @@ const TaskScreen = () => {
                     <Text style={styles.taskText}>
                       Assignee: {task.assignee}
                     </Text>
+                    <Text style={styles.taskText}>{task.priority}</Text>
                   </View>
                   <Button
                     title="Delete"

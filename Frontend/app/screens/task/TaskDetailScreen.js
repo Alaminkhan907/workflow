@@ -12,19 +12,21 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
+import { Picker } from "@react-native-picker/picker";
 
 const TestTask = () => {
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
   const [tasks, setTasks] = useState([]);
+  const [priority, setPriority] = useState("p4");
   const [newTask, setNewTask] = useState({
     taskName: "",
     dueDate: "",
     description: "",
     assignee: "",
+    priority: priority,
   });
   const [isAddTaskVisible, setIsAddTaskVisible] = useState(false);
-
 
   const fetchProjects = async () => {
     try {
@@ -71,6 +73,7 @@ const TestTask = () => {
         dueDate: newTask.dueDate,
         description: newTask.description || "",
         assignee: newTask.assignee || "Unassigned",
+        priority: newTask.priority,
       }),
     })
       .then((response) => response.json())
@@ -81,9 +84,11 @@ const TestTask = () => {
           dueDate: "",
           description: "",
           assignee: "",
+          priority: priority,
         });
         setIsAddTaskVisible(false);
         Alert.alert("Success", "Task added successfully!");
+        console.log(newTask)
       })
       .catch((error) => {
         console.error("Error adding task:", error);
@@ -225,6 +230,19 @@ const TestTask = () => {
               setNewTask((prev) => ({ ...prev, assignee: text }))
             }
           />
+          <View style={styles.pickerContainer}>
+            <Text style={styles.label}>Priority:</Text>
+            <Picker
+              selectedValue={priority}
+              style={styles.input}
+              onValueChange={(itemValue) => setPriority(itemValue)}
+            >
+              <Picker.Item label="P1" value="p1" />
+              <Picker.Item label="P2" value="p2" />
+              <Picker.Item label="P3" value="p3" />
+              <Picker.Item label="P4" value="p4" />
+            </Picker>
+          </View>
           <View style={styles.modalActions}>
             <Button
               title="Cancel"
