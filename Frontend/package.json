@@ -1,25 +1,26 @@
 {
-  "name": "Universal-work-flow",
+  "name": "Universal",
   "version": "1.0.0",
   "main": "expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web"
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web",
+    "build:android": "eas build -p android"
   },
   "dependencies": {
     "@expo/metro-runtime": "~3.2.3",
     "@expo/vector-icons": "^14.0.4",
-    "@react-native-async-storage/async-storage": "^2.1.0",
+    "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-community/checkbox": "^0.5.17",
-    "@react-native-community/datetimepicker": "^8.2.0",
+    "@react-native-community/datetimepicker": "8.0.1",
     "@react-native-community/masked-view": "^0.1.11",
-    "@react-native-picker/picker": "^2.9.0",
+    "@react-native-picker/picker": "2.7.5",
     "@react-navigation/bottom-tabs": "^6.6.1",
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/native-stack": "^6.11.0",
-    "expo": "~51.0.28",
+    "expo": "~51.0.39",
     "expo-status-bar": "~1.12.1",
     "expo-updates": "~0.25.27",
     "install": "^0.13.0",
@@ -37,6 +38,7 @@
     "react-native-web": "~0.19.10",
     "socket.io-client": "^4.8.1",
     "tailwindcss": "^3.4.14",
+    "Universal": "file:",
     "Universal-work-flow": "file:"
   },
   "devDependencies": {

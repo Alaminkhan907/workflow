@@ -32,7 +32,7 @@ const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || "0.0.0.0";
 
 // MongoDB connection
-mongoose.connect("mongodb://127.0.0.1:27017/workflow", {
+mongoose.connect("mongodb://mongo:27017/workflow", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -42,6 +42,7 @@ db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
   console.log("Connected to MongoDB");
 });
+
 
 // Helper to generate random IDs
 const generateID = () => Math.random().toString(36).substring(2, 10);

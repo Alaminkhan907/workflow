@@ -1,21 +1,20 @@
 {
-    "build": {
-      "preview": {
-        "android": {
-          "buildType": "apk"
-        }
+  "build": {
+    "preview": {
+      "android": {
+        "buildType": "apk"
       },
-      "preview2": {
-        "android": {
-          "gradleCommand": ":app:assembleRelease"
-        }
-      },
-      "preview3": {
-        "developmentClient": true
-      },
-      "preview4": {
-        "distribution": "internal"
-      },
-      "production": {}
+      "env": {
+        "EXPO_METRO_AND_BUNDLER_ENABLED": "1"
+      }
+    },
+    "production": {
+      "android": {
+        "gradleCommand": ":app:bundleRelease"
+      }
     }
+  },
+  "submit": {
+    "production": {}
   }
+}

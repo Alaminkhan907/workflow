@@ -7,6 +7,8 @@ services:
       - MONGO_URI=mongodb://mongo:27017/workflow
     depends_on:
       - mongo
+    networks:
+      - shared-network
 
   mongo:
     image: mongo:5
@@ -14,14 +16,8 @@ services:
       - "27017:27017"
     volumes:
       - ./mongodb:/data/db
-
-  # expo:
-  #   build: ./Frontend
-  #   ports:
-  #     - "19006:19006"
-  #   command: ["npx", "expo", "start", "--tunnel"]
-  #   networks:
-  #     - shared-network
+    networks:
+      - shared-network
 
 networks:
   shared-network:
