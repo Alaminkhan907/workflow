@@ -8,6 +8,7 @@ import {
   TextInput,
   Button,
   Alert,
+  ScrollView
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
@@ -77,7 +78,7 @@ const AddProjectScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       {/* Back Button */}
       <TouchableOpacity
         onPress={() => {
@@ -143,7 +144,7 @@ const AddProjectScreen = ({ navigation }) => {
 
       {/* Submit Button */}
       <Button title="Create Project" onPress={handleSubmit} />
-    </View>
+    </ScrollView>
   );
 };
 

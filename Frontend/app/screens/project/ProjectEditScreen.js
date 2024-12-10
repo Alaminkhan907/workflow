@@ -8,6 +8,7 @@ import {
   TextInput,
   Button,
   Alert,
+  ScrollView
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
@@ -60,7 +61,7 @@ const ProjectEditScreen = ({ route, navigation }) => {
 
       if (response.ok) {
         Alert.alert("Success", `Project "${ProjectName}" has been updated.`);
-        navigation.replace("NewProject");
+        navigation.replace("Project");
       } else {
         Alert.alert("Error", "Failed to update Project on the server.");
       }
@@ -77,7 +78,7 @@ const ProjectEditScreen = ({ route, navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <TouchableOpacity
         onPress={() => navigation.goBack()}
         style={styles.backButton}
@@ -141,7 +142,7 @@ const ProjectEditScreen = ({ route, navigation }) => {
       <TouchableOpacity style={styles.updateButton} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Update Project</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 

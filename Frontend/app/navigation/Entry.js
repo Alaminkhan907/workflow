@@ -15,6 +15,7 @@ import TaskScreen from "../screens/task/TaskScreen";
 import LoginScreen from "../screens/authentication/LoginScreen";
 import SignupScreen from "../screens/authentication/SignupScreen";
 import ForgotPasswordScreen from "../screens/authentication/ForgotScreen";
+import another from"../screens/task/another"
 
 import Chat from "../screens/communication/screens/Chat";
 import Messaging from "../screens/communication/screens/Messaging";
@@ -59,8 +60,8 @@ const DashboardStack = () => (
 
 const TaskStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
-    {/* <Stack.Screen name="Task" component={TaskScreen} /> */}
-    <Stack.Screen name="TaskDetailScreen" component={TaskDetailScreen} />
+    <Stack.Screen name="Task" component={another} />
+    {/* <Stack.Screen name="TaskDetailScreen" component={TaskDetailScreen} /> */}
   </Stack.Navigator>
 );
 const MessageStack = () => (
