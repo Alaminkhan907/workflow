@@ -310,7 +310,7 @@ app.delete("/deleteProject/:id", (req, res) => {
 
 // 3. Add a task
 app.post("/addTask", async (req, res) => {
-  const { projectId, taskName, dueDate, description, assignee } = req.body;
+  const { projectId, taskName, dueDate, description, assignee , priority} = req.body;
 
   console.log("Request Body:", req.body);
 
@@ -321,6 +321,7 @@ app.post("/addTask", async (req, res) => {
       dueDate,
       description,
       assignee,
+      priority,
     });
 
     const savedTask = await newTask.save();

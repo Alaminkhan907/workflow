@@ -39,7 +39,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
         Alert.alert("Error", "Failed to send password reset email.");
       }
     } catch (error) {
-      console.error("Network error: ", error);
+      console.error("Network error: ", error.message);
       Alert.alert(
         "Error",
         "An error occurred while trying to send the password reset email."

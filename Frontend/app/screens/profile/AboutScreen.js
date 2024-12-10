@@ -2,6 +2,7 @@ import React, { useState, useCallback } from "react";
 import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { API_URL } from "@env";
 
 const AboutScreen = ({ navigation }) => {
   const [getProfile, setProfile] = useState(null);
@@ -12,7 +13,7 @@ const AboutScreen = ({ navigation }) => {
 
   const fetchProfile = async () => {
     try {
-      const response = await fetch("http://localhost:3000/profile");
+      const response = await fetch(`${API_URL}/profile`);
       if (!response.ok) {
         throw new Error("Failed to fetch profile");
       }
@@ -20,7 +21,7 @@ const AboutScreen = ({ navigation }) => {
       // Use the first object if the API returns an array
       setProfile(data[0] || null);
     } catch (error) {
-      console.error("Error fetching profile:", error);
+      console.error("Error fetching profile:", error.message);
     }
   };
 

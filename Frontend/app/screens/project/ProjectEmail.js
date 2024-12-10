@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { API_URL } from "@env";
 
 const ProjectEmail = () => {
   const [emailData, setEmailData] = useState({
@@ -11,7 +12,7 @@ const ProjectEmail = () => {
 
   const sendEmail = async () => {
     try {
-      const response = await fetch("http://localhost:3000/send-email", {
+      const response = await fetch(`${API_URL}/send-email`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -27,7 +28,7 @@ const ProjectEmail = () => {
         Alert.alert("Error", result.error || "Failed to send email.");
       }
     } catch (error) {
-      console.error("Error sending email:", error);
+      console.error("Error sending email:", error.message);
       Alert.alert("Error", "Failed to send email. Please try again.");
     }
   };

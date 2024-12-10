@@ -51,7 +51,7 @@ const LoginScreen = ({ navigation, onLogin }) => {
         Alert.alert("Error", data.message || "Login failed");
       }
     } catch (error) {
-      console.error("Network error:", error);
+      console.error("Network error:", error.message);
       Alert.alert("Error", "Failed to connect to the server");
     }
   };

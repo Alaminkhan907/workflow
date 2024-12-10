@@ -23,7 +23,7 @@ const ProjectScreen = ({ navigation }) => {
       setProjects(data);
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching projects:", error);
+      console.error("Error fetching projects:", error.message);
       setLoading(false);
     }
   };

@@ -46,7 +46,7 @@ const SignupScreen = ({ navigation }) => {
         Alert.alert("Error", errorData.message || "Failed to sign up");
       }
     } catch (error) {
-      console.error("Network error:", error);
+      console.error("Network error:", error.message);
       Alert.alert("Error", "Failed to connect to the server.");
     }
   };

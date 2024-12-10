@@ -57,7 +57,7 @@ const AddProjectScreen = ({ navigation }) => {
         Alert.alert("Error", "Failed to create Project on the server.");
       }
     } catch (error) {
-      console.error("Network error: ", error);
+      console.error("Network error: ", error.message);
       Alert.alert(
         "Error",
         "An error occurred while sending the Project to the server."

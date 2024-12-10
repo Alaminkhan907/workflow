@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { API_URL } from "@env";
 import {
   View,
   Text,
@@ -25,7 +26,7 @@ const TaskScreen = () => {
 
   // Fetch all projects
   useEffect(() => {
-    fetch("http://localhost:3000/getProject")
+    fetch(`${API_URL}/getProject`)
       .then((res) => res.json())
       .then((data) => setProjects(data))
       .catch((err) => console.error(err));
@@ -34,10 +35,10 @@ const TaskScreen = () => {
   // Fetch tasks for selected project
   useEffect(() => {
     if (selectedProject) {
-      fetch(`http://localhost:3000/getTask/${selectedProject._id}`)
+      fetch(`${API_URL}/getTask/${selectedProject._id}`)
         .then((response) => response.json())
         .then((data) => setTasks(data))
-        .catch((error) => console.error("Error fetching tasks:", error));
+        .catch((error) => console.error("Error fetching tasks:", error.message));
       console.log(data);
     }
   }, [selectedProject]);
@@ -51,7 +52,7 @@ const TaskScreen = () => {
       return;
     }
 
-    fetch(`http://localhost:3000/addTask`, {
+    fetch(`${API_URL}/addTask`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -70,11 +71,11 @@ const TaskScreen = () => {
         // Reset the new task form
         setNewTask({ name: "", dueDate: "", description: "", assignee: "", priority: "" });
       })
-      .catch((error) => console.error("Error adding task:", error));
+      .catch((error) => console.error("Error adding task:", error.message));
   };
 
   const handleDeleteTask = (taskId) => {
-    fetch(`http://localhost:3000/deleteTasks/${taskId}`, {
+    fetch(`${API_URL}/deleteTasks/${taskId}`, {
       method: "DELETE",
     })
       .then((response) => {
@@ -86,7 +87,7 @@ const TaskScreen = () => {
           console.error("Failed to delete task");
         }
       })
-      .catch((error) => console.error("Error deleting task:", error));
+      .catch((error) => console.error("Error deleting task:", error.message));
   };
 
   return (

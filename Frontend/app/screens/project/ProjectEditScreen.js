@@ -34,7 +34,7 @@ const ProjectEditScreen = ({ route, navigation }) => {
         setAssignee(data.assignee);
       })
       .catch((error) => {
-        console.error("Error fetching project data: ", error);
+        console.error("Error fetching project data: ", error.message);
         Alert.alert("Error", "Failed to load project data.");
       });
   }, [projectId]);

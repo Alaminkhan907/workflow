@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState  } from "react";
+import { API_URL } from "@env";
 import {
   View,
   Text,
@@ -30,11 +31,11 @@ const TestTask = () => {
 
   const fetchProjects = async () => {
     try {
-      const res = await fetch("http://localhost:3000/getProject");
+      const res = await fetch(`${API_URL}/getProject`);
       const data = await res.json();
       setProjects(data);
-    } catch (err) {
-      console.error("Error fetching projects:", err);
+    } catch (error) {
+      console.error("Error fetching projects:", error.message);
     }
   };
 
@@ -47,7 +48,7 @@ const TestTask = () => {
 
   useEffect(() => {
     if (selectedProject) {
-      fetch(`http://localhost:3000/getTasksByProject/${selectedProject._id}`)
+      fetch(`${API_URL}/getTasksByProject/${selectedProject._id}`)
         .then((response) => response.json())
         .then((data) => setTasks(data))
         .catch((error) => console.error("Error fetching tasks:", error));
@@ -64,7 +65,7 @@ const TestTask = () => {
       return;
     }
 
-    fetch(`http://localhost:3000/addTask`, {
+    fetch(`${API_URL}/addTask`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -91,13 +92,13 @@ const TestTask = () => {
         console.log(newTask)
       })
       .catch((error) => {
-        console.error("Error adding task:", error);
+        console.error("Error adding task:", error.message);
         Alert.alert("Error", "Failed to add task. Please try again.");
       });
   };
 
   const handleDeleteTask = (taskId) => {
-    fetch(`http://localhost:3000/deleteTasks/${taskId}`, {
+    fetch(`${API_URL}/deleteTasks/${taskId}`, {
       method: "DELETE",
     })
       .then((response) => {
@@ -112,7 +113,7 @@ const TestTask = () => {
         }
       })
       .catch((error) => {
-        console.error("Error deleting task:", error);
+        console.error("Error deleting task:", error.message);
         Alert.alert("Error", "Failed to delete task. Please try again.");
       });
   };
