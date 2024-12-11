@@ -2,12 +2,11 @@ import React , {useState} from "react";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
 import DashboardScreen from "../screens/dashboard/DashboardScreen";
 import ProjectScreen from "../screens/project/ProjectScreen";
 import AboutScreen from "../screens/profile/AboutScreen";
 import NewProjectScreen from "../screens/task/TaskScreen";
-import TaskDetailScreen from "../screens/task/TaskDetailScreen";
+import TaskAddScreen from "../screens/task/TaskAddScreen";
 import AddProjectScreen from "../screens/project/AddProjectScreen";
 import ProjectDetailScreen from "../screens/project/ProjectDetailScreen";
 import ProjectEditScreen from "../screens/project/ProjectEditScreen";
@@ -15,18 +14,19 @@ import TaskScreen from "../screens/task/TaskScreen";
 import LoginScreen from "../screens/authentication/LoginScreen";
 import SignupScreen from "../screens/authentication/SignupScreen";
 import ForgotPasswordScreen from "../screens/authentication/ForgotScreen";
-
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import TaskDetailScreen from "../screens/task/TaskDetailScreen";
+import TaskEditScreen from "../screens/task/TaskEditScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const ProjectStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
-    <Stack.Screen name="Project" component={ProjectScreen} />
+    <Stack.Screen name="ProjectScreen" component={ProjectScreen} />
     <Stack.Group screenOptions={{ presentation: "modal" ,headerShown: false }}>
         <Stack.Screen name="AddProjectScreen" component={AddProjectScreen} />
       </Stack.Group>
@@ -42,16 +42,19 @@ const AboutStack =()=>(
 )
 const DashboardStack =()=>(
   <Stack.Navigator screenOptions={{ headerShown: false }}>
-    <Stack.Screen name="Dashboard" component={DashboardScreen}/>
+    <Stack.Screen name="DashboardScreen" component={DashboardScreen}/>
   </Stack.Navigator>
 )
 
 const TaskStack =()=>(
   <Stack.Navigator screenOptions={{ headerShown: false }}>
-    <Stack.Screen name="Task" component={TaskScreen}/>
+    <Stack.Screen name="TaskScreen" component={TaskScreen}/>
+    <Stack.Screen name="TaskAddScreen" component={TaskAddScreen}/>
+    <Stack.Screen name="TaskEditScreen" component={TaskEditScreen}/>
     <Stack.Screen name="TaskDetailScreen" component={TaskDetailScreen}/>
   </Stack.Navigator>
 )
+
 const AuthenticationStack =({ onLogin })=>(
   <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen name="Login">
@@ -93,7 +96,7 @@ const AppNavigator = () => {
       }}
     />
     <Tab.Screen
-      name="Project"
+      name="Projects"
       component={ProjectStack}
       options={{
         tabBarIcon: ({ color, size }) => (
@@ -103,7 +106,7 @@ const AppNavigator = () => {
       }}
     />
     <Tab.Screen
-      name="Task"
+      name="Tasks"
       component={TaskStack}
       options={{
         tabBarIcon: ({ color, size }) => (

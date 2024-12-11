@@ -13,8 +13,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
-const ProjectEditScreen = ({ route, navigation }) => {
-  const { projectId } = route.params;
+const TaskEditScreen = ({ route, navigation }) => {
+  const { projectId: taskId } = route.params;
+  console.log("TaskEditScreen received " + taskId);
 
   const [taskName, setTaskName] = useState("");
   const [dueDate, setDueDate] = useState(new Date());
@@ -22,9 +23,10 @@ const ProjectEditScreen = ({ route, navigation }) => {
   const [status, setStatus] = useState("pending");
   const [assignee, setAssignee] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [urgent, setUrgent] = useState("false");
 
   useEffect(() => {
-    fetch(`${API_URL}/getProject/${projectId}`)
+    fetch(`${API_URL}/getTask/${taskId}`)
       .then((response) => response.json())
       .then((data) => {
         setTaskName(data.name);
@@ -32,25 +34,27 @@ const ProjectEditScreen = ({ route, navigation }) => {
         setDescription(data.description);
         setStatus(data.status);
         setAssignee(data.assignee);
+        setUrgent(data.urgent);
       })
       .catch((error) => {
         console.error("Error fetching project data: ", error);
         Alert.alert("Error", "Failed to load project data.");
       });
-  }, [projectId]);
+  }, [taskId]);
 
   const handleSubmit = async () => {
     const updatedTask = {
       name: taskName,
       dueDate: dueDate.toISOString().split("T")[0],
-      description,
-      status,
-      assignee,
+      description: description,
+      status: status,
+      assignee: assignee,
       updatedAt: new Date(),
+      urgent: urgent,
     };
 
     try {
-      const response = await fetch(`${API_URL}/edittask/${projectId}`, {
+      const response = await fetch(`${API_URL}/edittask/${taskId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -60,7 +64,7 @@ const ProjectEditScreen = ({ route, navigation }) => {
 
       if (response.ok) {
         Alert.alert("Success", `Task "${taskName}" has been updated.`);
-        navigation.replace("AddProjectScreen");
+        navigation.goBack();
       } else {
         Alert.alert("Error", "Failed to update task on the server.");
       }
@@ -79,6 +83,7 @@ const ProjectEditScreen = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+       
         <Ionicons name="arrow-back" size={24} color="black" />
       </TouchableOpacity>
 
@@ -135,6 +140,19 @@ const ProjectEditScreen = ({ route, navigation }) => {
         </Picker>
       </View>
 
+      <View style={styles.pickerContainer}>
+        <Text style={styles.label}>Urgent:</Text>
+        <Picker
+          selectedValue={urgent}
+          style={styles.picker}
+          onValueChange={(itemValue) => setUrgent(itemValue)}
+        >
+          <Picker.Item label="No" value="false" />
+          <Picker.Item label="Yes" value="true" />
+          
+        </Picker>
+      </View>
+
       <TouchableOpacity style={styles.updateButton} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Update Task</Text>
       </TouchableOpacity>
@@ -142,7 +160,7 @@ const ProjectEditScreen = ({ route, navigation }) => {
   );
 };
 
-export default ProjectEditScreen;
+export default TaskEditScreen;
 
 const styles = StyleSheet.create({
   container: {
