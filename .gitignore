@@ -1,3 +1,4 @@
 mongodb/
 .expo/
-Frontend/.expo/
+.env
+eas_output.txt

@@ -9,7 +9,7 @@ build_app:
   
   script:
     - echo "Building the project..."
-    - cd ./Frontend
+    - cd ./frontend
     - npm install 
     - echo "Build complete."
   only:

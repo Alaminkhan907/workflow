@@ -1,6 +1,6 @@
 services:
   backend:
-    build: ./Backend-server
+    build: ./backend
     ports:
       - "3000:3000"
     environment:
@@ -9,14 +9,14 @@ services:
       - mongo
 
   mongo:
-    image: mongo:5
+    image: mongo:latest
     ports:
       - "27017:27017"
     volumes:
       - ./mongodb:/data/db
 
   expo:
-    build: ./Frontend
+    build: ./frontend
     ports:
       - "19006:19006"
     command: ["npx", "expo", "start", "--tunnel"]
