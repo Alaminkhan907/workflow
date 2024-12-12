@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -24,6 +24,8 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -82,10 +84,29 @@ const AuthenticationStack = ({ onLogin }) => (
 
 const AppNavigator = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const checkLogin = async () => {
+    try {
+      const data = await AsyncStorage.getItem('isLoggedIn');
+      console.log("Stored login status:", data);
+      setIsLoggedIn(data === 'true');
+    } catch (error) {
+      console.error("Error retrieving login status from AsyncStorage:", error);
+    }
+  };
+  useEffect(() => {
+    checkLogin();
+  }, []);
+
   const handleLogin = () => {
     setIsLoggedIn(true);
+    AsyncStorage.setItem('isLoggedIn', JSON.stringify(true)); 
+  }
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    AsyncStorage.setItem('isLoggedIn', JSON.stringify(false)); 
   };
-  console.log(isLoggedIn);
+  console.log("Is logged in?", isLoggedIn);
+
   return (
     <NavigationContainer>
       {isLoggedIn ? (

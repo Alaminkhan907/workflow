@@ -21,30 +21,37 @@ const LoginScreen = ({ navigation, onLogin }) => {
       Alert.alert("Error", "Please fill in both email and password");
       return;
     }
-
+  
     const loginData = { email, password };
-
+  
     try {
       const response = await fetch(`${API_URL}/login`, {
-        // const response = await fetch("http://localhost:3000/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(loginData),
       });
-      console.log(loginData);
+  
       const data = await response.json();
-
+  
       if (response.ok) {
-        const { role } = data;
-
+        const { role, token } = data;
+  
+        if (token) {
+          await AsyncStorage.setItem("token", token);
+          await AsyncStorage.setItem("isLoggedIn", JSON.stringify(true));
+        } else {
+          Alert.alert("Error", "Token not received from server");
+          return;
+        }
+  
         const loginInfo = {
           email,
           role,
           loginTime: Date.now(),
         };
-        // await AsyncStorage.setItem("loginInfo", JSON.stringify(loginInfo));
+        
         await AsyncStorage.setItem("username", email);
         onLogin();
         // navigation.replace("DashboardTab");
@@ -56,7 +63,7 @@ const LoginScreen = ({ navigation, onLogin }) => {
       Alert.alert("Error", "Failed to connect to the server");
     }
   };
-
+  
   const checkLoginStatus = async () => {
     try {
       const loginInfo = await AsyncStorage.getItem("loginInfo");

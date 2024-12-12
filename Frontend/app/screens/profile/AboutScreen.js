@@ -3,13 +3,23 @@ import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { API_URL } from "@env";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import RNRestart from 'react-native-restart';
 
 const AboutScreen = ({ navigation }) => {
   const [getProfile, setProfile] = useState(null);
 
-  const handleLogout = () => {
-    navigation.navigate("Login");
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem("token");
+      await AsyncStorage.setItem("isLoggedIn", JSON.stringify(false));
+      // RNRestart.Restart();
+      navigation.replace("Login");
+    } catch (error) {
+      console.error("Error during logout:", error.message);
+    }
   };
+  
 
   const fetchProfile = async () => {
     try {
@@ -18,7 +28,6 @@ const AboutScreen = ({ navigation }) => {
         throw new Error("Failed to fetch profile");
       }
       const data = await response.json();
-      // Use the first object if the API returns an array
       setProfile(data[0] || null);
     } catch (error) {
       console.error("Error fetching profile:", error.message);
