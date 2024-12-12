@@ -314,7 +314,7 @@ app.post("/addTask", async (req, res) => {
 
   console.log("Request Body:", req.body);
 
-  try {
+   
     const newTask = new Task({
       projectId,
       taskName,
@@ -324,12 +324,22 @@ app.post("/addTask", async (req, res) => {
       priority,
     });
 
-    const savedTask = await newTask.save();
-    res.status(201).send(savedTask);
-  } catch (err) {
-    console.error("Error Saving Task:", err);
-    res.status(500).send({ error: err.message });
-  }
+  //   const savedTask = await newTask.save();
+  //   res.status(201).send(savedTask);
+  // } catch (err) {
+  //   console.error("Error Saving Task:", err);
+  //   res.status(500).send({ error: err.message });
+  // }
+
+
+  newTask.save((err, Task) => {
+    if (err) {
+      return res.status(500).send(err);
+    }
+    res.status(201).send(Task);
+  });
+
+
 });
 
 // Route to get tasks by project ID

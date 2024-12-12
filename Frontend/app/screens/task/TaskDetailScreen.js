@@ -19,7 +19,7 @@ const TestTask = () => {
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
   const [tasks, setTasks] = useState([]);
-  const [priority, setPriority] = useState("p4");
+  const [priority, setPriority] = useState([]);
   const [newTask, setNewTask] = useState({
     taskName: "",
     dueDate: "",
@@ -174,6 +174,9 @@ const TestTask = () => {
                     <Text style={styles.taskText}>
                       Assignee: {task.assignee}
                     </Text>
+                    <Text style={styles.taskStatus}>
+                      Priority: {task.priority}
+                    </Text>
                   </View>
                   <Button
                     title="Delete"
@@ -269,9 +272,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 5,
   },
-  projectList: {
-    marginBottom: 1,
-  },
+  // projectList: {
+  //   marginBottom: 1,
+  // },
   projectButton: {
     marginRight: 10,
   },
@@ -318,6 +321,11 @@ const styles = StyleSheet.create({
   },
   taskText: {
     color: "#6c757d",
+  },
+  taskStatus:{
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#FF6347",
   },
   emptyText: {
     textAlign: "center",

@@ -12,14 +12,14 @@ const TaskSchema = new mongoose.Schema({
   },
   dueDate: {
     type: Date,
-    required: true,
+    required: false,
   },
   description: String,
   assignee: String,
   priority: {
     type: String,
     enum: ["p1", "p2", "p3", "p4"],
-    required: true }
+    required: false }
 });
 
 module.exports = mongoose.model("task", TaskSchema);

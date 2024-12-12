@@ -30,7 +30,7 @@ const Tab = createBottomTabNavigator();
 
 const ProjectStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
-    <Stack.Screen name="Project" component={ProjectScreen} />
+    <Stack.Screen name="ProjectHome" component={ProjectScreen} />
     <Stack.Group screenOptions={{ presentation: "modal", headerShown: false }}>
       <Stack.Screen name="AddProjectScreen" component={AddProjectScreen} />
     </Stack.Group>
@@ -49,24 +49,24 @@ const ProjectStack = () => (
 );
 const AboutStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
-    <Stack.Screen name="About" component={AboutScreen} />
+    <Stack.Screen name="AboutHome" component={AboutScreen} />
   </Stack.Navigator>
 );
 const DashboardStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
-    <Stack.Screen name="Dashboard" component={DashboardScreen} />
+    <Stack.Screen name="DashboardHome" component={DashboardScreen} />
   </Stack.Navigator>
 );
 
 const TaskStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
-    <Stack.Screen name="Task" component={another} />
+    <Stack.Screen name="TaskHome" component={TaskDetailScreen} />
     {/* <Stack.Screen name="TaskDetailScreen" component={TaskDetailScreen} /> */}
   </Stack.Navigator>
 );
 const MessageStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
-    <Stack.Screen name="Chat" component={Chat} />
+    <Stack.Screen name="ChatHome" component={Chat} />
     <Stack.Screen name="Messaging" component={Messaging} />
   </Stack.Navigator>
 );
@@ -109,7 +109,7 @@ const AppNavigator = () => {
                   color={color}
                 />
               ),
-              tabBarLabel: "Dashboard",
+              // tabBarLabel: "Dashboard",
             }}
           />
           <Tab.Screen
@@ -119,7 +119,7 @@ const AppNavigator = () => {
               tabBarIcon: ({ color, size }) => (
                 <FontAwesome5 name="tasks" size={24} color={color} />
               ),
-              tabBarLabel: "Projects",
+              // tabBarLabel: "Projects",
             }}
           />
           <Tab.Screen
@@ -129,7 +129,7 @@ const AppNavigator = () => {
               tabBarIcon: ({ color, size }) => (
                 <MaterialIcons name="task" size={24} color={color} />
               ),
-              tabBarLabel: "Tasks",
+              // tabBarLabel: "Tasks",
             }}
           />
           <Tab.Screen
@@ -139,7 +139,7 @@ const AppNavigator = () => {
               tabBarIcon: ({ color, size }) => (
                 <Feather name="info" size={24} color={color} />
               ),
-              tabBarLabel: "About",
+              // tabBarLabel: "About",
             }}
           />
           <Tab.Screen

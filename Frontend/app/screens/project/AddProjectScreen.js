@@ -51,7 +51,7 @@ const AddProjectScreen = ({ navigation }) => {
         );
         console.log("Response from server: ", data);
 
-        navigation.replace("Project");
+        navigation.replace("ProjectHome");
       } else {
         const errorData = await response.json();
         console.error("Error creating Project: ", errorData);

@@ -37,7 +37,7 @@ const ProjectDetailScreen = ({ route, navigation }) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <TouchableOpacity
-        onPress={() => navigation.replace("Project")}
+        onPress={() => navigation.replace("ProjectHome")}
         style={styles.backButton}
       >
         <Ionicons name="arrow-back" size={24} color="black" />

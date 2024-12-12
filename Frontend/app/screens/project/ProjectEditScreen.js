@@ -61,7 +61,7 @@ const ProjectEditScreen = ({ route, navigation }) => {
 
       if (response.ok) {
         Alert.alert("Success", `Project "${ProjectName}" has been updated.`);
-        navigation.replace("Project");
+        navigation.replace("ProjectHome");
       } else {
         Alert.alert("Error", "Failed to update Project on the server.");
       }
