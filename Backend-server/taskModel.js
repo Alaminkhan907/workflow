@@ -19,7 +19,8 @@ const TaskSchema = new mongoose.Schema({
   priority: {
     type: String,
     enum: ["p1", "p2", "p3", "p4"],
-    required: false }
+    default: "p4",
+  },
 });
 
 module.exports = mongoose.model("task", TaskSchema);

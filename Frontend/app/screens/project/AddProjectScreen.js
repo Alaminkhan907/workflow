@@ -12,7 +12,6 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import RNPickerSelect from "react-native-picker-select";
 import { API_URL } from "@env";
 
 const AddProjectScreen = ({ navigation }) => {
@@ -49,9 +48,13 @@ const AddProjectScreen = ({ navigation }) => {
   const handleDateChange = (event, selectedDate) => {
     setShowDatePicker(false);
     if (selectedDate) {
-      setDueDate(selectedDate);
+      setNewTask((prev) => ({
+        ...prev,
+        dueDate: selectedDate.toISOString().split("T")[0],
+      }));
     }
   };
+  
 
   const handleSubmit = async () => {
     const newProject = {

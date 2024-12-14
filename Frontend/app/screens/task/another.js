@@ -18,19 +18,43 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 
 const TestTask = () => {
   const [projects, setProjects] = useState([]);
-  const [dueDate, setDueDate] = useState(null);
-  const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
   const [tasks, setTasks] = useState([]);
-  const [priority, setPriority] = useState("p4");
+    const [showDatePicker, setShowDatePicker] = useState(false);
+  const [priority, setPriority] = useState([]);
+  const [assignee, setAssignee] = useState("");
+  const [profiles, setProfiles] = useState([]);
   const [newTask, setNewTask] = useState({
     taskName: "",
     dueDate: "",
     description: "",
     assignee: "",
-    priority: priority,
+    priority: "",
   });
   const [isAddTaskVisible, setIsAddTaskVisible] = useState(false);
+
+
+  
+    useEffect(() => {
+      const fetchProfiles = async () => {
+        try {
+          const response = await fetch(`${API_URL}/profile`);
+          if (!response.ok) {
+            throw new Error("Failed to fetch profiles");
+          }
+          const data = await response.json();
+          const formattedProfiles = data.map((profile) => ({
+            label: profile.name,
+            value: profile.name,
+          }));
+          setProfiles(formattedProfiles);
+        } catch (error) {
+          console.error("Error fetching profiles:", error.message);
+        }
+      };
+  
+      fetchProfiles();
+    }, []);
 
   const fetchProjects = async () => {
     try {
@@ -77,7 +101,7 @@ const TestTask = () => {
         dueDate: newTask.dueDate,
         description: newTask.description || "",
         assignee: newTask.assignee || "Unassigned",
-        priority: newTask.priority,
+        priority: newTask.priority || "p4",
       }),
     })
       .then((response) => response.json())
@@ -120,20 +144,18 @@ const TestTask = () => {
         Alert.alert("Error", "Failed to delete task. Please try again.");
       });
   };
-
+  const handleDateChange = (event, selectedDate) => {
+    setShowDatePicker(false);
+    if (selectedDate) {
+      setDueDate(selectedDate);
+    }
+  };
 
   useFocusEffect(
     useCallback(() => {
       fetchProjects();
     }, [])
   );
-
-  const showDatePickerModal = () => setShowDatePicker(true);
-
-  const handleDateChange = (event, selectedDate) => {
-    setShowDatePicker(false);
-    if (selectedDate) setDueDate(selectedDate);
-  };
 
   return (
     <View style={styles.container}>
@@ -184,6 +206,9 @@ const TestTask = () => {
                     <Text style={styles.taskText}>
                       Assignee: {task.assignee}
                     </Text>
+                    <Text style={styles.taskStatus}>
+                      Priority: {task.priority}
+                    </Text>
                   </View>
                   <Button
                     title="Delete"
@@ -195,7 +220,7 @@ const TestTask = () => {
             </ScrollView>
           ) : (
             <Text style={styles.emptyText}>
-              No tasks found for this project
+              No tasks found for this project.
             </Text>
           )}
         </View>
@@ -217,30 +242,23 @@ const TestTask = () => {
               setNewTask((prev) => ({ ...prev, taskName: text }))
             }
           />
-            <View style={styles.input}>
-            <TouchableOpacity onPress={showDatePickerModal} style={styles.dateInput}>
-                <Text style={styles.dateText}>
-                {newTask.dueDate ? newTask.dueDate : "Select Due Date"}
-                </Text>
-            </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => setShowDatePicker(true)}
+        style={styles.input}
+      >
+        <Text>
+          {newTask.dueDate ? newTask.dueDate : "Select Due Date"}
+        </Text>
+      </TouchableOpacity>
 
-            {showDatePicker && (
-                <DateTimePicker
-                value={dueDate || new Date()}
-                mode="date"
-                display="default"
-                onChange={(event, selectedDate) => {
-                    setShowDatePicker(false); 
-                    if (selectedDate) {
-                    const formattedDate = selectedDate.toISOString().split("T")[0];
-                    setDueDate(selectedDate); 
-                    setNewTask((prev) => ({ ...prev, dueDate: formattedDate }));
-                    }
-                }}
-                />
-            )}
-            </View>
-
+      {showDatePicker && (
+        <DateTimePicker
+          value={new Date()}
+          mode="date"
+          display="default"
+          onChange={handleDateChange}
+        />
+        )}
           <TextInput
             style={styles.input}
             placeholder="Description"
@@ -249,27 +267,38 @@ const TestTask = () => {
               setNewTask((prev) => ({ ...prev, description: text }))
             }
           />
-          <TextInput
-            style={styles.input}
-            placeholder="Assignee"
-            value={newTask.assignee}
-            onChangeText={(text) =>
-              setNewTask((prev) => ({ ...prev, assignee: text }))
-            }
-          />
-          <View style={styles.pickerContainer}>
-            <Text style={styles.label}>Priority:</Text>
-            <Picker
-              selectedValue={priority}
-              style={styles.input}
-              onValueChange={(itemValue) => setPriority(itemValue)}
-            >
-              <Picker.Item label="P1" value="p1" />
-              <Picker.Item label="P2" value="p2" />
-              <Picker.Item label="P3" value="p3" />
-              <Picker.Item label="P4" value="p4" />
-            </Picker>
-          </View>
+      {/* Assignee Picker */}
+      <View style={styles.pickerContainer}>
+        <Picker
+          selectedValue={newTask.assignee}
+          style={styles.picker}
+          onValueChange={(itemValue) => 
+            setNewTask((prev) => ({ ...prev, assignee: itemValue }))
+          }
+        >
+          <Picker.Item label="Select an assignee" value="" />
+          {profiles.map((profile) => (
+            <Picker.Item key={profile.value} label={profile.label} value={profile.value} />
+          ))}
+        </Picker>
+      </View>
+
+      <View style={styles.pickerContainer}>
+        <Text style={styles.label}>Priority:</Text>
+        <Picker
+          selectedValue={newTask.priority}
+          style={styles.input}
+          onValueChange={(itemValue) =>
+            setNewTask((prev) => ({ ...prev, priority: itemValue }))
+          }
+        >
+          <Picker.Item label="P1" value="p1" />
+          <Picker.Item label="P2" value="p2" />
+          <Picker.Item label="P3" value="p3" />
+          <Picker.Item label="P4" value="p4" />
+        </Picker>
+      </View>
+
           <View style={styles.modalActions}>
             <Button
               title="Cancel"
@@ -295,9 +324,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 5,
   },
-  projectList: {
-    marginBottom: 1,
-  },
+  // projectList: {
+  //   marginBottom: 1,
+  // },
   projectButton: {
     marginRight: 10,
   },
@@ -344,6 +373,11 @@ const styles = StyleSheet.create({
   },
   taskText: {
     color: "#6c757d",
+  },
+  taskStatus:{
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#FF6347",
   },
   emptyText: {
     textAlign: "center",

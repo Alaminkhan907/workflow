@@ -66,7 +66,7 @@ const DashboardStack = () => (
 
 const TaskStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
-    <Stack.Screen name="TaskHome" component={TaskDetailScreen} />
+    <Stack.Screen name="TaskHome" component={another} />
     {/* <Stack.Screen name="TaskDetailScreen" component={TaskDetailScreen} /> */}
   </Stack.Navigator>
 );
