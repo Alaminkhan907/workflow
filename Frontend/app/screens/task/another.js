@@ -195,7 +195,7 @@ const TestTask = () => {
             </ScrollView>
           ) : (
             <Text style={styles.emptyText}>
-              No tasks found for this project.
+              No tasks found for this project
             </Text>
           )}
         </View>

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, Image, TouchableOpacity,ScrollView } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { API_URL } from "@env";
@@ -8,11 +8,14 @@ import RNRestart from 'react-native-restart';
 
 const AboutScreen = ({ navigation }) => {
   const [getProfile, setProfile] = useState(null);
+  console.log(AsyncStorage.getItem("username"));
 
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem("token");
+      await AsyncStorage.removeItem("username");
       await AsyncStorage.setItem("isLoggedIn", JSON.stringify(false));
+      
       // RNRestart.Restart();
       navigation.replace("Login");
     } catch (error) {
@@ -20,15 +23,21 @@ const AboutScreen = ({ navigation }) => {
     }
   };
   
+  const handleEditProfile = async () =>{
+    console.log("Clicked Edit Profile");
+    navigation.replace("EditAboutHome");
+  }
 
   const fetchProfile = async () => {
     try {
-      const response = await fetch(`${API_URL}/profile`);
+      const username = await AsyncStorage.getItem("username");
+      const response = await fetch(`${API_URL}/profile/${username}`);
       if (!response.ok) {
         throw new Error("Failed to fetch profile");
       }
       const data = await response.json();
-      setProfile(data[0] || null);
+      // console.log(data);
+      setProfile(data);
     } catch (error) {
       console.error("Error fetching profile:", error.message);
     }
@@ -42,14 +51,27 @@ const AboutScreen = ({ navigation }) => {
 
   if (!getProfile) {
     return (
-      <View style={styles.container}>
-        <Text>Loading profile...</Text>
+      <View style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+      }}>
+        <Image 
+        source={require("../../../assets/waiting.png")}
+        style={{
+          width: '20%',
+          height: '20%',
+        }}
+        ></Image>
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView 
+    style={styles.scrollView}
+    contentContainerStyle={styles.contentContainer}>
       {/* Profile Picture */}
       <Image
         style={styles.profileImage}
@@ -65,7 +87,7 @@ const AboutScreen = ({ navigation }) => {
       <Text style={styles.roleText}>{getProfile.role}</Text>
 
       {/* Edit Profile Button */}
-      <TouchableOpacity style={styles.editProfileButton}>
+      <TouchableOpacity style={styles.editProfileButton} onPress={handleEditProfile}>
         <Text style={styles.editProfileButtonText}>Edit Profile</Text>
       </TouchableOpacity>
 
@@ -101,16 +123,20 @@ const AboutScreen = ({ navigation }) => {
           <Text style={styles.menuItemText}>Logout</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  scrollView: {
     flex: 1,
+  },
+  contentContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: "#fff",
     paddingHorizontal: 20,
-    alignItems: "center",
   },
   profileImage: {
     width: 120,

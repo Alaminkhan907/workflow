@@ -6,11 +6,23 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   role: { type: String, enum: ["manager", "worker"], required: true },
+  address: { type: String, required: false },
+  phone: { type: Number, required: false },
+  dob: { type: Number, required: false },
 });
+
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
+
+
+userSchema.pre("findOneAndUpdate", async function (next) {
+  if (this._update.password) {
+    this._update.password = await bcrypt.hash(this._update.password, 10);
+  }
   next();
 });
 

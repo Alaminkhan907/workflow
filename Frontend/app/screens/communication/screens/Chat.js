@@ -5,6 +5,7 @@ import Modal from "../component/Modal";
 import ChatComponent from "../component/ChatComponent";
 import socket from "../utils/socket";
 import { styles } from "../utils/styles";
+import { API_URL } from "@env";
 
 const Chat = () => {
   const [visible, setVisible] = useState(false);
@@ -12,7 +13,7 @@ const Chat = () => {
 
   useLayoutEffect(() => {
     function fetchGroups() {
-      fetch("http://localhost:3000/message")
+      fetch(`${API_URL}/message`)
         .then((res) => res.json())
         .then((data) => {
           console.log("Fetched Rooms:", data);

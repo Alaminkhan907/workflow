@@ -1,3 +1,4 @@
 import { io } from "socket.io-client";
-const socket = io.connect("http://localhost:3000");
+import { API_URL } from "@env";
+const socket = io.connect(`${API_URL}`);
 export default socket;

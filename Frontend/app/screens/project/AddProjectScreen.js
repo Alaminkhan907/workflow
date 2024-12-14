@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { API_URL } from "@env";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,11 +7,13 @@ import {
   TextInput,
   Button,
   Alert,
-  ScrollView
+  ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import RNPickerSelect from "react-native-picker-select";
+import { API_URL } from "@env";
 
 const AddProjectScreen = ({ navigation }) => {
   const [ProjectName, setProjectName] = useState("");
@@ -20,19 +21,47 @@ const AddProjectScreen = ({ navigation }) => {
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("pending");
   const [assignee, setAssignee] = useState("");
+  const [profiles, setProfiles] = useState([]);
   const [showDatePicker, setShowDatePicker] = useState(false);
+
+
+  useEffect(() => {
+    const fetchProfiles = async () => {
+      try {
+        const response = await fetch(`${API_URL}/profile`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch profiles");
+        }
+        const data = await response.json();
+        const formattedProfiles = data.map((profile) => ({
+          label: profile.name,
+          value: profile.name,
+        }));
+        setProfiles(formattedProfiles);
+      } catch (error) {
+        console.error("Error fetching profiles:", error.message);
+      }
+    };
+
+    fetchProfiles();
+  }, []);
+
+  const handleDateChange = (event, selectedDate) => {
+    setShowDatePicker(false);
+    if (selectedDate) {
+      setDueDate(selectedDate);
+    }
+  };
 
   const handleSubmit = async () => {
     const newProject = {
       name: ProjectName,
       dueDate: dueDate.toISOString().split("T")[0],
-      description: description,
-      status: status,
-      assignee: assignee,
+      description,
+      status,
+      assignee,
       createdAt: new Date(),
     };
-
-    console.log("Project Created: ", newProject);
 
     try {
       const response = await fetch(`${API_URL}/addProject`, {
@@ -47,33 +76,18 @@ const AddProjectScreen = ({ navigation }) => {
         const data = await response.json();
         Alert.alert(
           "Project Created",
-          `Project "${ProjectName}" has been created on the server.`
+          `Project "${ProjectName}" has been created successfully.`
         );
         console.log("Response from server: ", data);
-
         navigation.replace("ProjectHome");
       } else {
         const errorData = await response.json();
-        console.error("Error creating Project: ", errorData);
-        Alert.alert("Error", "Failed to create Project on the server.");
+        console.error("Error creating project: ", errorData);
+        Alert.alert("Error", "Failed to create the project on the server.");
       }
     } catch (error) {
       console.error("Network error: ", error.message);
-      Alert.alert(
-        "Error",
-        "An error occurred while sending the Project to the server."
-      );
-    }
-  };
-
-  const showDatePickerModal = () => {
-    setShowDatePicker(true);
-  };
-
-  const handleDateChange = (event, selectedDate) => {
-    setShowDatePicker(false);
-    if (selectedDate) {
-      setDueDate(selectedDate);
+      Alert.alert("Error", "An error occurred while creating the project.");
     }
   };
 
@@ -81,18 +95,16 @@ const AddProjectScreen = ({ navigation }) => {
     <ScrollView style={styles.container}>
       {/* Back Button */}
       <TouchableOpacity
-        onPress={() => {
-          console.log("Back button pressed");
-          navigation.replace("Project");
-          // navigation.goBack();
-        }}
+        onPress={() => navigation.replace("ProjectHome")}
         style={styles.backButton}
       >
         <Ionicons name="arrow-back" size={24} color="black" />
       </TouchableOpacity>
 
-      {/* Project Input Fields */}
+      {/* Form Title */}
       <Text style={styles.title}>Add New Project</Text>
+
+      {/* Project Name */}
       <TextInput
         style={styles.input}
         placeholder="Project Name"
@@ -100,25 +112,35 @@ const AddProjectScreen = ({ navigation }) => {
         onChangeText={setProjectName}
       />
 
+      {/* Description */}
       <TextInput
         style={styles.input}
         placeholder="Description"
         value={description}
         onChangeText={setDescription}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Assignee"
-        value={assignee}
-        onChangeText={setAssignee}
-      />
 
-      <TouchableOpacity onPress={showDatePickerModal} style={styles.input}>
+    <View style={styles.pickerContainer}>
+
+      <Picker
+        selectedValue={assignee}
+        style={styles.picker}
+        onValueChange={(itemValue) => setAssignee(itemValue)}
+      >
+        <Picker.Item label="Select an assignee" value="" />
+        {profiles.map((profile) => (
+          <Picker.Item key={profile.value} label={profile.label} value={profile.value} />
+        ))}
+      </Picker>
+    </View>
+
+
+      {/* Due Date Picker */}
+      <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.input}>
         <Text>
           {dueDate ? dueDate.toISOString().split("T")[0] : "Select Due Date"}
         </Text>
       </TouchableOpacity>
-
       {showDatePicker && (
         <DateTimePicker
           value={dueDate}
@@ -128,7 +150,7 @@ const AddProjectScreen = ({ navigation }) => {
         />
       )}
 
-      {/* Status Dropdown */}
+      {/* Status Picker */}
       <View style={styles.pickerContainer}>
         <Text style={styles.label}>Status:</Text>
         <Picker
@@ -188,3 +210,4 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
 });
+

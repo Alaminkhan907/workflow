@@ -200,6 +200,59 @@ app.get("/profile", async (req, res) => {
   });
 });
 
+
+app.get("/profile/:email", async (req, res) => {
+  try {
+    const email = req.params.email;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+
+
+
+app.put("/profile/:email", async (req, res) => {
+  try {
+    const email = req.params.email;
+    const { name, password, address, phone, dob } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    
+    if (name) user.name = name;
+    if (password) user.password = password;
+    if (address) user.address = address;
+    if (phone) user.phone = phone;
+    if (dob) user.dob = dob;
+
+    await user.save();
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+
+
+
+
+
+
+
 // Protected Project Route
 app.post("/addProject", (req, res) => {
   const { name, dueDate, description, status, assignee } = req.body;

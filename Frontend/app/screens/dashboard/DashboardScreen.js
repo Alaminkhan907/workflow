@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Image,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -49,8 +50,20 @@ const DashboardScreen = ({ navigation }) => {
   );
   if (loading) {
     return (
-      <View style={styles.container}>
-        <Text>Loading...</Text>
+      <View style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+      }}>
+        <Image 
+        source={require("../../../assets/waiting.png")}
+        style={{
+          width: '20%',
+          height: '20%',
+        }}
+        // resizeMode="cover" 
+        ></Image>
       </View>
     );
   }
