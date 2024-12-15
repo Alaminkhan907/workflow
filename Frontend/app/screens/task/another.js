@@ -10,19 +10,22 @@ import {
   ScrollView,
   Alert,
   Modal,
+  Image,
   TouchableOpacity,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
+import { Platform } from 'react-native';
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 const TestTask = () => {
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
   const [tasks, setTasks] = useState([]);
-    const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [priority, setPriority] = useState([]);
   const [assignee, setAssignee] = useState("");
+  const [loading, setLoading] = useState(true);
   const [profiles, setProfiles] = useState([]);
   const [newTask, setNewTask] = useState({
     taskName: "",
@@ -38,6 +41,7 @@ const TestTask = () => {
     useEffect(() => {
       const fetchProfiles = async () => {
         try {
+          setLoading(true);
           const response = await fetch(`${API_URL}/profile`);
           if (!response.ok) {
             throw new Error("Failed to fetch profiles");
@@ -48,8 +52,10 @@ const TestTask = () => {
             value: profile.name,
           }));
           setProfiles(formattedProfiles);
+          setLoading(false);
         } catch (error) {
           console.error("Error fetching profiles:", error.message);
+          setLoading(false);
         }
       };
   
@@ -157,6 +163,25 @@ const TestTask = () => {
     }, [])
   );
 
+  if (loading) {
+   return (
+      <View style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+      }}>
+        <Image 
+        source={require("../../../assets/waiting.png")}
+        style={{
+          width: '20%',
+          height: '20%',
+        }}
+        ></Image>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Task Management</Text>
@@ -242,23 +267,46 @@ const TestTask = () => {
               setNewTask((prev) => ({ ...prev, taskName: text }))
             }
           />
-      <TouchableOpacity
-        onPress={() => setShowDatePicker(true)}
-        style={styles.input}
-      >
-        <Text>
-          {newTask.dueDate ? newTask.dueDate : "Select Due Date"}
-        </Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setShowDatePicker(true)}
+          style={styles.input}
+        >
+          <Text>
+            {newTask.dueDate ? newTask.dueDate : "Select Due Date"}
+          </Text>
+        </TouchableOpacity>
 
-      {showDatePicker && (
-        <DateTimePicker
-          value={new Date()}
-          mode="date"
-          display="default"
-          onChange={handleDateChange}
-        />
+        {showDatePicker && (
+          Platform.OS === 'web' ? (
+            <input
+              type="date"
+              onChange={(e) => {
+                setShowDatePicker(false);
+                setNewTask((prevTask) => ({
+                  ...prevTask,
+                  dueDate: e.target.value,
+                }));
+              }}
+              style={{ marginTop: 10 }}
+            />
+          ) : (
+            <DateTimePicker
+              value={new Date()}
+              mode="date"
+              display="default"
+              onChange={(event, selectedDate) => {
+                setShowDatePicker(false);
+                if (selectedDate) {
+                  setNewTask((prevTask) => ({
+                    ...prevTask,
+                    dueDate: selectedDate.toISOString().split("T")[0],
+                  }));
+                }
+              }}
+            />
+          )
         )}
+
           <TextInput
             style={styles.input}
             placeholder="Description"
@@ -271,12 +319,12 @@ const TestTask = () => {
       <View style={styles.pickerContainer}>
         <Picker
           selectedValue={newTask.assignee}
-          style={styles.picker}
+          style={styles.input}
           onValueChange={(itemValue) => 
             setNewTask((prev) => ({ ...prev, assignee: itemValue }))
           }
         >
-          <Picker.Item label="Select an assignee" value="" />
+          <Picker.Item label="No One" value="" />
           {profiles.map((profile) => (
             <Picker.Item key={profile.value} label={profile.label} value={profile.value} />
           ))}

@@ -14,7 +14,7 @@ import { useFocusEffect } from "@react-navigation/native";
 const LoginScreen = ({ navigation, onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  console.log(API_URL);
+  // console.log(API_URL);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -40,6 +40,7 @@ const LoginScreen = ({ navigation, onLogin }) => {
   
         if (token) {
           await AsyncStorage.setItem("token", token);
+          await AsyncStorage.setItem("username", email);
           await AsyncStorage.setItem("isLoggedIn", JSON.stringify(true));
         } else {
           Alert.alert("Error", "Token not received from server");
@@ -52,7 +53,7 @@ const LoginScreen = ({ navigation, onLogin }) => {
           loginTime: Date.now(),
         };
         
-        await AsyncStorage.setItem("username", email);
+        // await AsyncStorage.setItem("username", email);
         onLogin();
         // navigation.replace("DashboardTab");
       } else {

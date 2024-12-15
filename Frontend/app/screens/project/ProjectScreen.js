@@ -6,6 +6,7 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  Image,
   Button,
   TextInput,
 } from "react-native";
@@ -39,9 +40,20 @@ const ProjectScreen = ({ navigation }) => {
   };
 
   if (loading) {
-    return (
-      <View style={styles.container}>
-        <Text>Loading...</Text>
+   return (
+      <View style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+      }}>
+        <Image 
+        source={require("../../../assets/waiting.png")}
+        style={{
+          width: '20%',
+          height: '20%',
+        }}
+        ></Image>
       </View>
     );
   }

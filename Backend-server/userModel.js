@@ -7,8 +7,8 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   role: { type: String, enum: ["manager", "worker"], required: true },
   address: { type: String, required: false },
-  phone: { type: Number, required: false },
-  dob: { type: Number, required: false },
+  phone: { type: String, required: false },
+  dob: { type: Date, required: false },
 });
 
 

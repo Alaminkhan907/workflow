@@ -4,20 +4,22 @@ import { useFocusEffect } from "@react-navigation/native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { API_URL } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import RNRestart from 'react-native-restart';
+
 
 const AboutScreen = ({ navigation }) => {
   const [getProfile, setProfile] = useState(null);
-  console.log(AsyncStorage.getItem("username"));
+  const [listOfProject, setListOfProject] = useState([]);
+  // console.log(AsyncStorage.getItem("username"));
 
   const handleLogout = async () => {
     try {
-      await AsyncStorage.removeItem("token");
-      await AsyncStorage.removeItem("username");
-      await AsyncStorage.setItem("isLoggedIn", JSON.stringify(false));
-      
-      // RNRestart.Restart();
-      navigation.replace("Login");
+      // await AsyncStorage.removeItem("token");
+      // await AsyncStorage.removeItem("username");
+      // await AsyncStorage.setItem("isLoggedIn", JSON.stringify(false));
+
+
+    await AsyncStorage.clear();
+    navigation.replace("DashboardHome");
     } catch (error) {
       console.error("Error during logout:", error.message);
     }
@@ -43,6 +45,31 @@ const AboutScreen = ({ navigation }) => {
     }
   };
 
+  const handleResponsibility = async () => {
+    try {
+      const userExists = getProfile?.name;
+      const response = await fetch(`${API_URL}/getTask/${userExists}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch tasks");
+      }
+  
+      const data = await response.json();
+  
+      if (!data || data.length === 0) {
+        console.log("No tasks found");
+        return;
+      }
+  
+      console.log("Projects data:", data); 
+  
+      
+      navigation.navigate("ProjectListHome", { projects: data });
+    } catch (error) {
+      console.error("Error fetching tasks:", error.message);
+    }
+  };
+  
+  
   useFocusEffect(
     useCallback(() => {
       fetchProfile();
@@ -98,7 +125,7 @@ const AboutScreen = ({ navigation }) => {
           <Text style={styles.menuItemText}>Settings</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={handleResponsibility}>
           <MaterialIcons name="assignment-ind" size={24} color="black" />
           <Text style={styles.menuItemText}>Responsibility</Text>
         </TouchableOpacity>
@@ -106,11 +133,6 @@ const AboutScreen = ({ navigation }) => {
         <TouchableOpacity style={styles.menuItem}>
           <Ionicons name="location-outline" size={24} color="black" />
           <Text style={styles.menuItemText}>Address</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.menuItem}>
-          <Ionicons name="lock-closed-outline" size={24} color="black" />
-          <Text style={styles.menuItemText}>Change Password</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
@@ -123,6 +145,8 @@ const AboutScreen = ({ navigation }) => {
           <Text style={styles.menuItemText}>Logout</Text>
         </TouchableOpacity>
       </View>
+      {/* <h1>Project List</h1>
+      <ProjectList projects={listOfProject} /> */}
     </ScrollView>
   );
 };

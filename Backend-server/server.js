@@ -340,26 +340,7 @@ app.delete("/deleteProject/:id", (req, res) => {
   });
 });
 
-// From down Project add with last Project showing
 
-// app.post("/addTask", (req, res) => {
-//   const { ProjectName, taskName, dueDate, description, assignee } = req.body;
-
-//   const newTask = new Project({
-//     ProjectName,
-//     taskName,
-//     dueDate,
-//     description,
-//     assignee,
-//   });
-
-//   newTask.save((err, Task) => {
-//     if (err) {
-//       return res.status(500).send(err);
-//     }
-//     res.status(201).send(Task);
-//   });
-// });
 
 // 3. Add a task
 app.post("/addTask", async (req, res) => {
@@ -376,14 +357,6 @@ app.post("/addTask", async (req, res) => {
       assignee,
       priority,
     });
-
-  //   const savedTask = await newTask.save();
-  //   res.status(201).send(savedTask);
-  // } catch (err) {
-  //   console.error("Error Saving Task:", err);
-  //   res.status(500).send({ error: err.message });
-  // }
-
 
   newTask.save((err, Task) => {
     if (err) {
@@ -406,6 +379,28 @@ app.get("/getTasksByProject/:projectId", async (req, res) => {
   }
 });
 
+
+// Finding number of task by assignee
+app.get("/getTask/:assignee", async (req, res) => {
+  try {
+    const { assignee } = req.params;
+    if (!assignee) {
+      return res.status(400).send({ error: "Assignee parameter is required." });
+    }
+    const tasks = await Task.find({ assignee }).exec();
+    if (!tasks || tasks.length === 0) {
+      return res.status(404).send({ message: "No tasks found for this assignee." });
+    }
+    res.status(200).send(tasks);
+  } catch (err) {
+    console.error("Error finding tasks:", err);
+    res.status(500).send({ error: "Internal server error" });
+  }
+});
+
+
+
+
 app.get("/getTask", (req, res) => {
   Task.find({}, (err, task) => {
     if (err) {
@@ -426,6 +421,7 @@ app.get("/getTask", (req, res) => {
 //   });
 // });
 // 4. Delete a task
+
 app.delete("/deleteTasks/:taskId", async (req, res) => {
   try {
     const taskId = mongoose.Types.ObjectId(req.params.taskId);

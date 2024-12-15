@@ -17,6 +17,7 @@ import SignupScreen from "../screens/authentication/SignupScreen";
 import ForgotPasswordScreen from "../screens/authentication/ForgotScreen";
 import another from"../screens/task/another"
 import EditProfile from "../screens/profile/EditProfile";
+import ProjectList from "../screens/profile/ProjectList";
 
 import testProject from"../screens/project/testProject"
 
@@ -56,6 +57,7 @@ const AboutStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen name="AboutHome" component={AboutScreen} />
     <Stack.Screen name="EditAboutHome" component={EditProfile} />
+    <Stack.Screen name="ProjectListHome" component={ProjectList} />
   </Stack.Navigator>
 );
 const DashboardStack = () => (
