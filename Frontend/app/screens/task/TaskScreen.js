@@ -127,7 +127,9 @@ const TaskScreen = () => {
                     <Text style={styles.taskText}>
                       Assignee: {task.assignee}
                     </Text>
-                    <Text style={styles.taskText}>{task.priority}</Text>
+                    <Text style={styles.taskText}>
+                      Priority: {task.priority}
+                    </Text>
                   </View>
                   <Button
                     title="Delete"

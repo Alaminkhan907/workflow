@@ -19,13 +19,12 @@ const TestTask = () => {
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
   const [tasks, setTasks] = useState([]);
-  const [priority, setPriority] = useState("p4");
   const [newTask, setNewTask] = useState({
     taskName: "",
     dueDate: "",
     description: "",
     assignee: "",
-    priority: priority,
+    priority: "p4",
   });
   const [isAddTaskVisible, setIsAddTaskVisible] = useState(false);
 
@@ -85,7 +84,7 @@ const TestTask = () => {
           dueDate: "",
           description: "",
           assignee: "",
-          priority: priority,
+          priority: "p4",
         });
         setIsAddTaskVisible(false);
         Alert.alert("Success", "Task added successfully!");
@@ -174,6 +173,9 @@ const TestTask = () => {
                     <Text style={styles.taskText}>
                       Assignee: {task.assignee}
                     </Text>
+                    <Text style={styles.taskText}>
+                      Priority: {task.priority}
+                    </Text>
                   </View>
                   <Button
                     title="Delete"
@@ -234,9 +236,9 @@ const TestTask = () => {
           <View style={styles.pickerContainer}>
             <Text style={styles.label}>Priority:</Text>
             <Picker
-              selectedValue={priority}
+              selectedValue={newTask.priority}
               style={styles.input}
-              onValueChange={(itemValue) => setPriority(itemValue)}
+              onValueChange={(itemValue) => setNewTask((prev) => ({ ...prev, priority: itemValue}))}
             >
               <Picker.Item label="P1" value="p1" />
               <Picker.Item label="P2" value="p2" />
@@ -245,12 +247,12 @@ const TestTask = () => {
             </Picker>
           </View>
           <View style={styles.modalActions}>
+          <Button title="Add Task" onPress={handleAddTask} />
             <Button
               title="Cancel"
               color="#6c757d"
               onPress={() => setIsAddTaskVisible(false)}
             />
-            <Button title="Add Task" onPress={handleAddTask} />
           </View>
         </View>
       </Modal>
