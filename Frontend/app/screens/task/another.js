@@ -369,19 +369,16 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 24,
-    fontWeight: "bold",
     marginBottom: 5,
+    fontWeight: '700',
   },
-  // projectList: {
-  //   marginBottom: 1,
-  // },
   projectButton: {
     marginRight: 10,
   },
   subheader: {
     fontSize: 18,
-    fontWeight: "bold",
     marginVertical: 10,
+    fontWeight: '600',
   },
   tasksContainer: {
     flex: 1,
@@ -400,7 +397,7 @@ const styles = StyleSheet.create({
   },
   addTaskText: {
     color: "#fff",
-    fontWeight: "bold",
+    fontWeight: '500',
   },
   taskItem: {
     flexDirection: "row",
@@ -417,15 +414,15 @@ const styles = StyleSheet.create({
   },
   taskName: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: '700',
   },
   taskText: {
     color: "#6c757d",
   },
-  taskStatus:{
+  taskStatus: {
     fontSize: 14,
-    fontWeight: "bold",
     color: "#FF6347",
+    fontWeight: '600',
   },
   emptyText: {
     textAlign: "center",
@@ -449,6 +446,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 1,
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 5,
+    fontWeight: '500',
+  },
+  pickerContainer: {
+    marginVertical: 10,
   },
 });
 

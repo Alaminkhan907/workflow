@@ -1,27 +1,26 @@
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import React from "react"; 
+import {   
+  View,   
+  Text,   
+  StyleSheet,   
+  ScrollView,   
+  Image,   
+  TouchableOpacity, 
+} from "react-native"; 
+import { Ionicons } from "@expo/vector-icons";  
 
-const ProjectList = ({ route , navigation }) => {
-  const { projects = [] } = route.params || {};
-  // console.log(projects);
+const ProjectList = ({ route, navigation }) => {   
+  const { projects = [] } = route.params || {};   
 
-  return (
+  return (     
     <ScrollView style={styles.container}>
-
-    <TouchableOpacity
+      <TouchableOpacity
         onPress={() => navigation.replace("AboutHome")}
         style={styles.backButton}
       >
         <Ionicons name="arrow-back" size={24} color="black" />
       </TouchableOpacity>
+      
       {projects.length === 0 ? (
         <View style={styles.emptyState}>
           <Image
@@ -33,12 +32,12 @@ const ProjectList = ({ route , navigation }) => {
       ) : (
         <>
           <View style={styles.header}>
-          <Text style={styles.headerText}>List Of Task for {projects[0]?.assignee}</Text>
+            <Text style={styles.headerText}>List Of Task for {projects[0]?.assignee}</Text>
           </View>
-
+          
           <View style={styles.projectSection}>
             <Text style={styles.sectionTitle}>Task</Text>
-
+            
             {projects.map((project) => (
               <View key={project._id} style={styles.projectItem}>
                 <Text style={styles.projectTitle}>{project.taskName}</Text>
@@ -60,8 +59,8 @@ const ProjectList = ({ route , navigation }) => {
         </>
       )}
     </ScrollView>
-  );
-};
+  ); 
+};  
 
 const styles = StyleSheet.create({
   container: {
@@ -69,12 +68,15 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "#F8F8F8",
   },
+  backButton: {
+    marginBottom: 10,
+  },
   header: {
     marginBottom: 20,
   },
   headerText: {
     fontSize: 28,
-    fontWeight: "bold",
+    fontWeight: '600', // Changed to string
     textAlign: "center",
   },
   projectSection: {
@@ -82,7 +84,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: "600",
+    fontWeight: '600', // Changed to string
     marginBottom: 10,
   },
   projectItem: {
@@ -98,15 +100,15 @@ const styles = StyleSheet.create({
   },
   projectTitle: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600', // Changed to string
   },
   projectDetail: {
     fontSize: 14,
     color: "#777",
   },
-  dealine:{
+  dealine: {
     fontSize: 14,
-    fontWeight:700,
+    fontWeight: '700', // Changed to string
     color: "#ff0000",
   },
   emptyState: {
@@ -124,6 +126,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#555",
   },
-});
+});  
 
 export default ProjectList;

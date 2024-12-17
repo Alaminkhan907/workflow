@@ -57,13 +57,11 @@ const Messaging = ({ route, navigation }) => {
         ]}
       >
         {chatMessages[0] ? (
-          <FlatList
-            data={chatMessages}
-            renderItem={({ item }) => (
-              <MessageComponent item={item} user={user} />
-            )}
-            keyExtractor={(item) => item.id}
-          />
+        <FlatList
+        data={chatMessages}
+        renderItem={({ item }) => <MessageComponent item={item} user={user} />}
+        keyExtractor={(item, index) => item.id || index.toString()}
+      />
         ) : (
           <Text>No messages yet</Text>
         )}

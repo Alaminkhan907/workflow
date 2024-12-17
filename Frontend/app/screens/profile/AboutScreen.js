@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from "react";
-import { Text, View, StyleSheet, Image, TouchableOpacity,ScrollView } from "react-native";
+import React, { useState, useCallback, useEffect } from "react";
+import { Text, View, StyleSheet, Image, TouchableOpacity,ScrollView,Alert,DevSettings } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { API_URL } from "@env";
@@ -9,21 +9,50 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const AboutScreen = ({ navigation }) => {
   const [getProfile, setProfile] = useState(null);
   const [listOfProject, setListOfProject] = useState([]);
-  // console.log(AsyncStorage.getItem("username"));
+  const [myTime, setMyTime] = useState(new Date());
+
+  useEffect(() => {
+    const timerID = setInterval(() => tick(), 1000);
+
+    return () => clearInterval(timerID);
+  }, []);
+
+  function tick() {
+    setMyTime(new Date());
+  }
 
   const handleLogout = async () => {
     try {
-      // await AsyncStorage.removeItem("token");
-      // await AsyncStorage.removeItem("username");
-      // await AsyncStorage.setItem("isLoggedIn", JSON.stringify(false));
-
-
-    await AsyncStorage.clear();
-    navigation.replace("DashboardHome");
+      Alert.alert(
+        "Logout",
+        "Are you sure you want to log out?",
+        [
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+          {
+            text: "Logout",
+            style: "destructive",
+            onPress: async () => {
+              await AsyncStorage.clear();
+              setTimeout(() => {
+                if (__DEV__) {
+                  DevSettings.reload();
+                } else {
+                  setMyTime(new Date());
+                }
+              }, 500);
+            },
+          },
+        ]
+      );
     } catch (error) {
-      console.error("Error during logout:", error.message);
+      console.error("Logout error:", error);
+      Alert.alert("Logout Failed", "Unable to log out. Please try again.");
     }
   };
+
   
   const handleEditProfile = async () =>{
     console.log("Clicked Edit Profile");
