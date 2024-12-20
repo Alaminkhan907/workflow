@@ -147,6 +147,7 @@ const AddProjectScreen = ({ navigation }) => {
       <View style={styles.pickerContainer}>
         <Text style={styles.label}>Status:</Text>
         <Picker
+          testID="status-picker"
           selectedValue={status}
           style={styles.picker}
           onValueChange={(itemValue) => setStatus(itemValue)}
