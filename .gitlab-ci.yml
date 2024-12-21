@@ -19,6 +19,8 @@ build_app:
 test_app:
   stage: test
   script:
+    - echo "Running tests..."
+    - cd ./Frontend
     - npm install --legacy-peer-deps
     - npm install jest-expo --save-dev
     - npm install @testing-library/react-native @testing-library/jest-native --save-dev
