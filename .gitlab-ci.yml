@@ -30,6 +30,7 @@ test_app:
       - jest-report.xml # archive report
   only:
     - master
+    - iteration4
 
 deploy_app:
   stage: deploy
