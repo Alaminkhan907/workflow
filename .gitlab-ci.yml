@@ -23,7 +23,7 @@ test_app:
     - cd ./Frontend
     - npm install --legacy-peer-deps
     - npm install jest-expo --save-dev
-    - npm install @testing-library/react-native @testing-library/jest-native --save-dev
+    #- npm install @testing-library/react-native @testing-library/jest-native --save-dev
     - npm test 
   only:
     - master
