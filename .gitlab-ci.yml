@@ -18,16 +18,11 @@ build_app:
 
 test_app:
   stage: test
-  before_script:
-    - npm ci # faster than npm install
   script:
+    - npm install --legacy-peer-deps
+    - npm install jest-expo --save-dev
+    - npm install @testing-library/react-native @testing-library/jest-native --save-dev
     - npm test 
-  artifacts:
-    when: always
-    reports:
-      junit: jest-report.xml # Save test results as JUnit XML
-    paths:
-      - jest-report.xml # archive report
   only:
     - master
     - iteration4
