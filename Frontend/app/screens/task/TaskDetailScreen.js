@@ -214,18 +214,25 @@ const TestTask = () => {
             style={styles.input}
             placeholder="Due Date (YYYY-MM-DD)"
             value={newTask.dueDate}
+            minimumDate={new Date()}
             onChangeText={(text) =>
               setNewTask((prev) => ({ ...prev, dueDate: text }))
             }
           />
-          <TextInput
-            style={styles.input}
-            placeholder="Description"
-            value={newTask.description}
-            onChangeText={(text) =>
-              setNewTask((prev) => ({ ...prev, description: text }))
+        <TextInput
+          style={styles.input}
+          placeholder="Enter Due Date (YYYY-MM-DD)"
+          value={newTask.dueDate}
+          onChangeText={(text) => {
+            const enteredDate = new Date(text);
+            const today = new Date();
+            if (enteredDate >= today) {
+              setNewTask((prev) => ({ ...prev, dueDate: text }));
+            } else {
+              alert('Please enter a future date.');
             }
-          />
+          }}
+/>
           <TextInput
             style={styles.input}
             placeholder="Assignee"

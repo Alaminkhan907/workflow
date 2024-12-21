@@ -121,6 +121,7 @@ const ProjectEditScreen = ({ route, navigation }) => {
           value={dueDate}
           mode="date"
           display="default"
+          minimumDate={new Date()}
           onChange={handleDateChange}
         />
       )}

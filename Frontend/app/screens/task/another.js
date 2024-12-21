@@ -294,6 +294,7 @@ const TestTask = () => {
               value={new Date()}
               mode="date"
               display="default"
+              minimumDate={new Date()}
               onChange={(event, selectedDate) => {
                 setShowDatePicker(false);
                 if (selectedDate) {

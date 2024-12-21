@@ -9,6 +9,7 @@ services:
       - mongo
     networks:
       - shared-network
+    restart: always
 
   mongo:
     image: mongo:5
