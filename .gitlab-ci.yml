@@ -2,6 +2,7 @@ image: node:18
 
 stages:          
   - build
+  - test
   - deploy
 
 build_app:
@@ -12,6 +13,21 @@ build_app:
     - cd ./Frontend
     - npm install 
     - echo "Build complete."
+  only:
+    - master
+
+test_app:
+  stage: test
+  before_script:
+    - npm ci # faster than npm install
+  script:
+    - npm test 
+  artifacts:
+    when: always
+    reports:
+      junit: jest-report.xml # Save test results as JUnit XML
+    paths:
+      - jest-report.xml # archive report
   only:
     - master
 
