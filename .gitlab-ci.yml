@@ -1,12 +1,14 @@
 image: node:18
 
+before_script:
+  - npm install -g expo-cli eas-cli
+
 stages:          
   - build
   - deploy
 
 build_app:
   stage: build
-  
   script:
     - echo "Building the project..."
     - cd ./Frontend
@@ -14,6 +16,9 @@ build_app:
     - echo "Build complete."
   only:
     - master
+    - main
+  tags:
+    - docker
 
 deploy_app:
   stage: deploy
@@ -27,5 +32,6 @@ deploy_app:
     - echo "Deploy complete."
   only:
     - master
-
-    
+    - main
+  tags:
+    - docker
